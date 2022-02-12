@@ -1,0 +1,29 @@
+{
+  "name": "apliko",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "ts-node _example/index.ts",
+    "devb": "rm -rf build && tsc"
+  },
+  "author": "antja03",
+  "license": "ISC",
+  "dependencies": {
+    "@aspiesoft/cwsclib": "^1.0.2",
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
+    "@kunigi/string-compression": "^1.0.2",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.6.0",
+    "hypixel-api": "^1.2.0",
+    "moment": "^2.29.1",
+    "nedb": "^1.8.0",
+    "nosql": "^6.1.0",
+    "reflect-metadata": "^0.1.13",
+    "shrink-string": "^3.0.9"
+  },
+  "devDependencies": {
+    "@types/nedb": "^1.8.12"
+  }
+}
