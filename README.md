@@ -14,7 +14,7 @@ Sending modals in Apliko is just as quick and easy as the rest of its features. 
 @ButtonCallback('my_form_button')
 public async openMyForm(context: ButtonInteractionContext) {
     await InteractionReplyModal(this.bot, context.interaction, // this.bot contains the REST instance
-        ModalInteraction
+        Modal
             .new()
             .id('my_form')
             .title('My Form')
