@@ -8,6 +8,53 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 "apliko": "file:path/to/Apliko"
 ```
 
+## Docs
+Incomplete, but some information can be seen below
+
+## Global Interaction Handlers
+Creating a global interaction handler means you'll recieve ```all``` interactionCreate events. It's recommended for components that can exist in multiple places at the same time. To create a global interaction handler, you have to extend the InteractionHandler class and decorate your functions as callbacks.
+```typescript
+@RegisterCallbacks
+export class MyInteractionHandler extends InteractionHandler {
+    
+    @ButtonCallback('my_button_id')
+    public async handleMyButton(context: ButtonInteractionContext) {
+        //context.interaction...
+    }
+    
+}
+```
+You probably noticed that we store interactions in a context. We do this because there's some cool features that allow you to persist data along with a component id. This allows you to do some cool things like invite components that never expire and persist across restarts.
+```typescript
+    @ButtonCallback('my_button_id')
+    public async handleMyButton(context: ButtonInteractionContext) {
+        await context.interaction.reply({
+            content: 'Click yes to accept',
+            components: ComponentsToDJS(
+                ActionRow
+                    .new()
+                    .components(
+                        Button
+                            .new()                            
+                            .label('Yes')
+                            .style(ButtonStyle.SUCCESS)
+                            .id(CreateComponentInteractionData({
+                                componentId: 'accept_invite',
+                                data: [
+                                    channelId: context.interaction.channelId
+                                ]
+                            })))
+            )
+        })
+    }
+    
+    @ButtonCallback('accept_invite')
+    public async handleAcceptInvite(context: ButtonInteractionContext) {
+        const channelId = context.data.data[0] // I need to refactor this, I know lol
+        // add to channel based on id.....
+    }
+```
+
 ## Modals
 Sending modals in Apliko is just as quick and easy as the rest of its features. To send a modal you use the function InteractionReplyModal as shown below.
 ```typescript
@@ -29,7 +76,7 @@ public async openMyForm(context: ButtonInteractionContext) {
 }
 ```
 
-Receiving modals makes use of our collector class. Just like collecting message components or messages, all you have to do is pass a key so Apliko can determine if the modal submited was the one your waiting for.
+Recieving modals makes use of our collector class. Just like collecting message components or messages, all you have to do is pass a key so Apliko can determine if the modal submited is the one your waiting for.
 ```typescript
 //public async openMyForm(context:...
 const formResponses = await this.bot.collector.collectForm({
@@ -38,9 +85,3 @@ const formResponses = await this.bot.collector.collectForm({
     modalId: 'my_form'
 });
 ```
-
-## Docs
-Coming soon...
-
-## Plans
-While Apliko is currently a Discord.js framework, we hope to remove Discord.js from our dependencies in the future so we can implement new Discord API features as soon as they come out, and continue improving the work flow of bot developers.
