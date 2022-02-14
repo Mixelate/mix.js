@@ -1,7 +1,7 @@
 import { Routes } from "discord-api-types/v9";
 import { GuildMember, GuildMemberResolvable, Interaction, Message } from "discord.js";
 import { AplikoBot } from "../Bot";
-import { ApiModalInteraction, FormCollectionKey } from "../struct";
+import { ApiBaseInteraction, ApiModalInteraction, FormCollectionKey, InteractionType, IsApiModalInteraction } from "../struct";
 import { ComponentCollectionKey } from "../struct/apliko/collector/ComponentCollectionKey";
 import { MessageCollectionKey } from "../struct/apliko/collector/MessageCollectionKey";
 import { ModalSubmitInteraction } from "../struct/discord/interactions/parser/ModalSubmitInteraction";
@@ -21,10 +21,9 @@ export class CollectorManager {
     constructor(bot: AplikoBot) {
         bot.client.on('messageCreate', this.onMessageCreate.bind(this))
         bot.client.on('interactionCreate', this.onInteractionCreate.bind(this))
-        bot.client.ws.on('INTERACTION_CREATE', interaction => {
-            switch (interaction.type) {
-                case 5: {
-                    const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalInteraction)
+        bot.client.ws.on('INTERACTION_CREATE', (interaction: ApiBaseInteraction<InteractionType>) => {
+            if (IsApiModalInteraction(interaction)) {
+                const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalInteraction)
 
                     this._awaitingForm.forEach((deferredValues, formCollectionKey) => {
                         if (modalSubmitInteraction.getUserId() != formCollectionKey.userId) return
@@ -42,8 +41,6 @@ export class CollectorManager {
                             }
                         }
                     )
-
-                }
             }
         })
     }
