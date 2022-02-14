@@ -24,7 +24,7 @@ export class MyInteractionHandler extends InteractionHandler {
     
 }
 ```
-You probably noticed that we store interactions in a context. We do this because there's some cool features that allow you to persist data along with a component id. This allows you to do some cool things like invite components that never expire and persist across restarts.
+You probably noticed that we store interactions in a context. We do this because there's some cool features that allow you to persist data along with a component id. This allows you to do some cool things like invite components that never expire and persist across restarts. We do this via an on-disk nosql database.
 ```typescript
     @ButtonCallback('my_button_id')
     public async handleMyButton(context: ButtonInteractionContext) {
