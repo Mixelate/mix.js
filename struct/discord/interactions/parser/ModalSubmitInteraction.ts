@@ -8,7 +8,7 @@ export class ModalSubmitInteraction {
 
     constructor(apiInteraction: ApiModalInteraction) {
         this.channelId = apiInteraction.channel_id;
-        this.userId = apiInteraction.member.user.id;
+        this.userId = apiInteraction.member!.user.id;
         this.values = new Map();
 
         apiInteraction.data.components.forEach(actionRow => {
