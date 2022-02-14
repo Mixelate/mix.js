@@ -24,7 +24,7 @@ export class MyInteractionHandler extends InteractionHandler {
     
 }
 ```
-You probably noticed that interactions are stored in a context. That's because Apliko enabled you to persist data alongside a component id. This makes doing cool things like invite components that never expire and persist across restarts incredibly easy to make.<br/> <br/>This works by using an on-disk nosql database to store the real component id and data along with a uniquely generated string. That string replaces the components id when it's sent to the Discord API so that when a component interaction with that string is receieved, we can retrieve the real component id and attached data to pass along to the corresponding handler.
+You probably noticed that interactions are stored in a context. That's because Apliko enables you to persist data alongside a component id. This makes doing cool things like invite components that never expire and persist across restarts incredibly easy to make.<br/> <br/>This works by using an on-disk nosql database to store the real component id and data along with a uniquely generated string. That string replaces the components id when it's sent to the Discord API so that when a component interaction with that string is receieved, we can retrieve the real component id and attached data to pass along to the corresponding callback.
 ```typescript
     @ButtonCallback('my_button_id')
     public async handleMyButton(context: ButtonInteractionContext) {
