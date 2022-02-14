@@ -1,1 +1,1 @@
-export * from './ModalInteraction';
+export * from './Modal';

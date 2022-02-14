@@ -1,10 +1,8 @@
-import { Interaction } from "discord.js";
 import { ValidationError } from "../../../error/ValidationError";
 import { JsonSerializable } from "../../../JsonSerializable";
 import { ActionRow, TextField } from "../../components";
-import { ApiModalInteraction } from "../data";
 
-export class ModalInteraction implements JsonSerializable {
+export class Modal implements JsonSerializable {
 
     public _id: string = '';
     public _title: string = '';
@@ -12,21 +10,21 @@ export class ModalInteraction implements JsonSerializable {
 
     private constructor() {}
 
-    public static new(): ModalInteraction {
-        return new ModalInteraction();
+    public static new(): Modal {
+        return new Modal();
     }
 
-    public id(value: string): ModalInteraction{
+    public id(value: string): Modal{
         this._id = value;
         return this;
     }
 
-    public title(value: string): ModalInteraction {
+    public title(value: string): Modal {
         this._title = value;
         return this;
     }
 
-    public components(...components: TextField[]): ModalInteraction {
+    public components(...components: TextField[]): Modal {
         this._components.push(...components);
         return this;
     }
