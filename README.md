@@ -8,8 +8,39 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 "apliko": "file:path/to/Apliko"
 ```
 
-## Plans
-While Apliko is currently a Discord.js framework, we hope to remove Discord.js from our dependencies in the future so we can implement new Discord API features as soon as they come out, and continue improving the work flow of bot developers.
+## Modals
+Sending modals in Apliko is just as quick and easy as the rest of its features. To send a modal you use the function InteractionReplyModal as shown below.
+```typescript
+@ButtonCallback('my_form_button')
+public async openMyForm(context: ButtonInteractionContext) {
+    await InteractionReplyModal(this.bot, context.interaction, // this.bot contains the REST instance
+        ModalInteraction
+            .new()
+            .id('my_form')
+            .title('My Form')
+            .components(
+                TextField
+                    .new()
+                    .customId('my_form_field')
+                    .title('Field')
+                    .placeholder('This is placeholder text!')
+                    .style(TextFieldStyle.SHORT))
+    );
+}
+```
+
+Receiving modals makes use of our collector class. Just like collecting message components or messages, all you have to do is pass a key so Apliko can determine if the modal submited was the one your waiting for.
+```typescript
+//public async openMyForm(context:...
+const formResponses = await this.bot.collector.collectForm({
+    userId: context.interaction.user.id,
+    channelId: context.interaction.channelId,
+    modalId: 'my_form'
+});
+```
 
 ## Docs
 Coming soon...
+
+## Plans
+While Apliko is currently a Discord.js framework, we hope to remove Discord.js from our dependencies in the future so we can implement new Discord API features as soon as they come out, and continue improving the work flow of bot developers.
