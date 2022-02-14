@@ -1,3 +1,4 @@
+import { Routes } from "discord-api-types/v9";
 import { GuildMember, GuildMemberResolvable, Interaction, Message } from "discord.js";
 import { AplikoBot } from "../Bot";
 import { ApiModalInteraction, FormCollectionKey } from "../struct";
@@ -32,6 +33,15 @@ export class CollectorManager {
                         deferredValues.resolve?.(modalSubmitInteraction.getValues())
                         this._awaitingForm.delete(formCollectionKey)
                     })
+
+                    bot.rest.post(
+                        Routes.interactionCallback(interaction.id, interaction.token),
+                        {
+                            'body': {
+                                type: 6
+                            }
+                        }
+                    )
 
                 }
             }

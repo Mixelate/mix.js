@@ -28,7 +28,6 @@ export class PanelManager {
         const componentInteractionData = await FetchComponentInteractionData(interaction.customId)
 
         if (interaction.isButton()) {
-            interaction.deferUpdate()
             context.currentPage.onButton(<PanelButtonInteractionContext> {
                 interaction: interaction,
                 data: componentInteractionData,
@@ -37,7 +36,6 @@ export class PanelManager {
         }
 
         if (interaction.isSelectMenu()) {
-            interaction.deferUpdate()
             context.currentPage.onSelect(<PanelSelectMenuInteractionContext> {
                 interaction: interaction,
                 data: componentInteractionData,
@@ -63,11 +61,7 @@ export class PanelManager {
 
     public async openDynamicPage(context: PanelContext, page: PanelPage) {
         context.currentPage = page
-
-        await context.interaction.editReply({
-            embeds: AplikoBuildEmbeds(...page.embeds),
-            components: AplikoBuildComponentRows(...page.components)
-        })
+        await this.refreshPage(context)
     }
 
     public async openPage(context: PanelContext, pageClass: PanelPageClass) {
@@ -75,10 +69,13 @@ export class PanelManager {
             ThrowError('Panel page is not cached.')
 
         context.currentPage = page
+        await this.refreshPage(context)
+    }
 
+    public async refreshPage(context: PanelContext) {
         await context.interaction.editReply({
-            embeds: AplikoBuildEmbeds(...page.embeds),
-            components: AplikoBuildComponentRows(...page.components)
+            embeds: AplikoBuildEmbeds(...context.currentPage.embeds),
+            components: AplikoBuildComponentRows(...context.currentPage.components)
         })
     }
 

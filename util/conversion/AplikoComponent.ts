@@ -76,7 +76,7 @@ export function AplikoBuildComponent(aplikoComponent: AplikoComponent): MessageC
     if (isAplikoDropdown(aplikoComponent)) {
         const messageSelect = new MessageSelectMenu()
             .setCustomId(aplikoComponent.customId)
-            .setPlaceholder(aplikoComponent.label)
+            .setPlaceholder(aplikoComponent.label || 'Pick an option')
             .setOptions(aplikoComponent.options.map(option => {
                 return {
                     label: option.title,
@@ -103,6 +103,9 @@ export function AplikoBuildComponentRows(...componentRows: AplikoComponent[][]):
     const compiledRows: MessageActionRow[] = []
 
     componentRows.forEach((row, rowIdx) => {
+        if (row.length == 0)
+            return;
+
         const compiledRow = new MessageActionRow()
 
         row.forEach((component, componentIdx) => {
