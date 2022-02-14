@@ -1,6 +1,6 @@
 import { ComponentType } from "../enum/ComponentType";
 
-export interface Component<T extends ComponentType> {
+export interface ApiComponent<T extends ComponentType> {
     
     readonly type: T;
 

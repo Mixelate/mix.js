@@ -1,5 +1,5 @@
 import { Interaction } from "discord.js";
-import { PanelContext, PanelPage } from "../application/panel";
+import { PanelButtonInteractionContext, PanelContext, PanelPage, PanelSelectMenuInteractionContext } from "../application/panel";
 import { AplikoBot } from "../Bot";
 import { FetchComponentInteractionData } from "../struct/apliko/ComponentInteractionData";
 import { AplikoBuildComponentRows, AplikoBuildEmbeds, RepliableInteraction, ThrowError } from "../util";
@@ -29,12 +29,20 @@ export class PanelManager {
 
         if (interaction.isButton()) {
             interaction.deferUpdate()
-            context.currentPage.onButton(context, componentInteractionData)
+            context.currentPage.onButton(<PanelButtonInteractionContext> {
+                interaction: interaction,
+                data: componentInteractionData,
+                panelContext: context
+            }, componentInteractionData)
         }
 
         if (interaction.isSelectMenu()) {
             interaction.deferUpdate()
-            context.currentPage.onSelect(context, componentInteractionData)
+            context.currentPage.onSelect(<PanelSelectMenuInteractionContext> {
+                interaction: interaction,
+                data: componentInteractionData,
+                panelContext: context
+            }, componentInteractionData)
         }
     }
 

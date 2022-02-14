@@ -1,1 +1,2 @@
-export * from './InteractionData';
+export * from './ApiBaseInteraction';
+export * from './ApiModalInteraction';

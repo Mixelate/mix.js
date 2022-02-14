@@ -1,0 +1,20 @@
+import { InteractionType } from "../enum"
+
+export interface ApiBaseInteraction<T extends InteractionType> {
+
+    readonly type: T
+
+    id: string
+
+    application_id: string
+
+    // TODO: Proper typings
+    member: {
+        user: {
+            id: string
+        }
+    }
+
+    channel_id: string
+
+}

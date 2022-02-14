@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "ts-node _example/index.ts",
+    "create": "yourself",
+    "dev": "ts-node Dev.ts",
     "devb": "rm -rf build && tsc"
   },
   "author": "antja03",

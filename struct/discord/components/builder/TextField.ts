@@ -1,13 +1,15 @@
 import { JsonSerializable } from "../../../JsonSerializable";
 import { TextFieldStyle } from "../enum/TextFieldStyle";
-import { TextFieldData } from "../data/TextFieldData";
+import { ApiTextField } from "../api/ApiTextField";
+import { ComponentType } from "../enum";
 
 export class TextField implements JsonSerializable {
 
-    private data: TextFieldData
+    private data: ApiTextField
 
     constructor(custom_id?: string) {
-        this.data = <TextFieldData> {
+        this.data = <ApiTextField> {
+            type: ComponentType.TEXT_INPUT,
             custom_id: custom_id,
         };
     }
@@ -52,8 +54,8 @@ export class TextField implements JsonSerializable {
         return this;
     }
 
-    public toJSON(): TextFieldData {
-        return this.data;
+    public toJSON(): ApiTextField {
+        return {...this.data};
     }
 
 }

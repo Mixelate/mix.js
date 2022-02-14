@@ -2,10 +2,10 @@ import { ButtonInteraction, Interaction, Message, SelectMenuInteraction, TextCha
 import { AplikoBot } from '../Bot'
 import { CallbackHandler } from '../decorator'
 import { CALLBACK_WILDCARD } from '../decorator/DecoratorSymbols'
-import { FetchComponentInteractionData } from '../util'
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../util/conversion/AplikoEmbed'
 import { SilentCatch, ThrowError } from '../util/Errors'
 import { ButtonInteractionContext, SelectMenuInteractionContext } from '../struct/apliko/Contexts'
+import { FetchComponentInteractionData } from '../struct/apliko/ComponentInteractionData'
 
 export class Controller implements CallbackHandler {
 

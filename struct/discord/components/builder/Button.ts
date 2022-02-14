@@ -1,9 +1,9 @@
 import { ButtonStyle } from "../enum/ButtonStyle";
 import { ComponentType } from "../enum/ComponentType";
-import { BaseButtonData, InteractButtonData, InteractButtonStyle, LinkButtonData } from "../data/ButtonData";
+import { ApiBaseButton, ApiInteractButton, InteractButtonStyle, ApiLinkButton } from "../api/ApiButton";
 import { JsonSerializable } from "../../../JsonSerializable";
 
-export abstract class Button<T extends BaseButtonData> implements JsonSerializable {
+export abstract class Button<T extends ApiBaseButton> implements JsonSerializable {
     
     protected data: T;
 
@@ -28,10 +28,10 @@ export abstract class Button<T extends BaseButtonData> implements JsonSerializab
     }
 }
 
-export class InteractButton extends Button<InteractButtonData> {
+export class InteractButton extends Button<ApiInteractButton> {
 
     public constructor(custom_id?: string) {
-        super(<InteractButtonData>{
+        super(<ApiInteractButton>{
             type: ComponentType.BUTTON,
             custom_id: custom_id || '',
             style: ButtonStyle.SECONDARY
@@ -47,10 +47,10 @@ export class InteractButton extends Button<InteractButtonData> {
     }
 }
 
-export class LinkButton extends Button<LinkButtonData> {
+export class LinkButton extends Button<ApiLinkButton> {
 
     public constructor(url?: string) {
-        super(<LinkButtonData>{
+        super(<ApiLinkButton>{
             label: '',
             type: ComponentType.BUTTON,
             url: url || '',

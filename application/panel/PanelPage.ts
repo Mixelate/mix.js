@@ -23,22 +23,14 @@ export class PanelPage implements CallbackHandler {
         this.selectCallbacks = new Map()
     }
 
-    public async onButton(panelContext: PanelContext, data: ComponentInteractionDataModel) {
+    public async onButton(context: PanelButtonInteractionContext, data: ComponentInteractionDataModel) {
         this.buttonCallbacks.get(data.componentId)
-            ?.apply(this, [<PanelButtonInteractionContext> {
-                interaction: panelContext.interaction,
-                data: data,
-                panelContext: panelContext
-            }])
+            ?.apply(this, [context])
     }
 
-    public async onSelect(panelContext: PanelContext, data: ComponentInteractionDataModel) {
+    public async onSelect(context: PanelSelectMenuInteractionContext, data: ComponentInteractionDataModel) {
         this.selectCallbacks.get(data.componentId)
-            ?.apply(this, [<PanelSelectMenuInteractionContext> {
-                interaction: panelContext.interaction,
-                data: data,
-                panelContext: panelContext
-            }])
+            ?.apply(this, [context])
     }
 
     get bot() {

@@ -1,3 +1,4 @@
+import { REST } from "@discordjs/rest"
 import { BitFieldResolvable, Client, ColorResolvable, IntentsString } from "discord.js"
 import EventEmitter from "events"
 import { ControllerManager, PanelManager, QuestionnaireManager } from "./manager"
@@ -10,6 +11,7 @@ export class AplikoBot extends EventEmitter {
 
     private _options: AplikoBotOptions
     private _client: Client
+    private _rest: REST
     private _commandManager: CommandManager
     private _panelManager: PanelManager
     private _questionnaireManager: QuestionnaireManager
@@ -22,6 +24,7 @@ export class AplikoBot extends EventEmitter {
 
         this._options = options
         this._client = new Client({ intents: options.intents })
+        this._rest = new REST().setToken(this._options.token)
         this._commandManager = new CommandManager(this)
         this._panelManager = new PanelManager(this)
         this._questionnaireManager = new QuestionnaireManager(this)
@@ -41,6 +44,10 @@ export class AplikoBot extends EventEmitter {
 
     public get client(): Client {
         return this._client
+    }
+
+    public get rest() {
+        return this._rest;
     }
 
     public get commands(): CommandManager {

@@ -13,11 +13,11 @@ export interface ComponentInteractionData {
     data: string[]
 }
 
-export const InteractionData = CreateNewDataStore<ComponentInteractionDataModel>('interaction_data')
+export const ComponentInteractionData = CreateNewDataStore<ComponentInteractionDataModel>('interaction_data')
 
 export const GenerateComponentInteractionDataId = async (): Promise<string> => {
     const randomId = crypto.randomBytes(16).toString('hex')
-    const exists = await FindInDataStore(InteractionData, { id: randomId }).catch(_ => null)
+    const exists = await FindInDataStore(ComponentInteractionData, { id: randomId }).catch(_ => null)
 
     if (exists)
         return GenerateComponentInteractionDataId()
@@ -27,7 +27,7 @@ export const GenerateComponentInteractionDataId = async (): Promise<string> => {
 export const CreateComponentInteractionData = async (input: ComponentInteractionData): Promise<string> => {
     const id = await GenerateComponentInteractionDataId()
 
-    await InsertIntoDataStore(InteractionData, {
+    await InsertIntoDataStore(ComponentInteractionData, {
         id,
         componentId: input.componentId,
         data: input.data,
@@ -46,10 +46,10 @@ export const FetchComponentInteractionData = async (id: string): Promise<Compone
             delete: false
         }
 
-    const interactionData = await FindInDataStore(InteractionData, { id: id.replace('apliko:', '') })
+    const componentInteractionData = await FindInDataStore(ComponentInteractionData, { id: id.replace('apliko:', '') })
 
-    if (!interactionData)
+    if (!componentInteractionData)
         Promise.reject()
 
-    return interactionData
+    return componentInteractionData
 }

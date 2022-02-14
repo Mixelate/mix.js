@@ -1,21 +1,41 @@
 import { GuildMember, GuildMemberResolvable, Interaction, Message } from "discord.js";
 import { AplikoBot } from "../Bot";
+import { ApiModalInteraction, FormCollectionKey } from "../struct";
 import { ComponentCollectionKey } from "../struct/apliko/collector/ComponentCollectionKey";
 import { MessageCollectionKey } from "../struct/apliko/collector/MessageCollectionKey";
+import { ModalSubmitInteraction } from "../struct/discord/interactions/parser/ModalSubmitInteraction";
 import { SafeDeleteMessage } from "../util";
 import { defer, Deferred } from "../util/Defer";
 import { getUserIdFromMention } from "../util/discord/MentionParser";
 import { ThrowError } from "../util/Errors";
+
 
 export class CollectorManager {
 
     private _awaitingMessage: Map<MessageCollectionKey, Deferred<Message>> = new Map()
     private _awaitingSelection: Map<ComponentCollectionKey, Deferred<string[]>> = new Map()
     private _awaitingButton: Map<ComponentCollectionKey, Deferred<string>> = new Map()
+    private _awaitingForm: Map<FormCollectionKey, Deferred<Map<string, string>>> = new Map();
 
     constructor(bot: AplikoBot) {
         bot.client.on('messageCreate', this.onMessageCreate.bind(this))
         bot.client.on('interactionCreate', this.onInteractionCreate.bind(this))
+        bot.client.ws.on('INTERACTION_CREATE', interaction => {
+            switch (interaction.type) {
+                case 5: {
+                    const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalInteraction)
+
+                    this._awaitingForm.forEach((deferredValues, formCollectionKey) => {
+                        if (modalSubmitInteraction.getUserId() != formCollectionKey.userId) return
+                        if (modalSubmitInteraction.getChannelId() != formCollectionKey.channelId) return
+            
+                        deferredValues.resolve?.(modalSubmitInteraction.getValues())
+                        this._awaitingForm.delete(formCollectionKey)
+                    })
+
+                }
+            }
+        })
     }
 
     private async onMessageCreate(message: Message) {
@@ -98,6 +118,14 @@ export class CollectorManager {
         return deferredButton.promise!
     }
 
+    public async collectForm(formCollectionKey: FormCollectionKey): Promise<Map<string, string>> {
+        let deferredValues = defer<Map<string, string>>();
+
+        this._awaitingForm.get(formCollectionKey)?.reject?.('You started another interaction before finishing this one so it\'s been terminated.');
+        this._awaitingForm.set(formCollectionKey, deferredValues)
+
+        return deferredValues.promise!
+    }
 }
 
 export interface MessageCollector {
