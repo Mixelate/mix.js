@@ -60,7 +60,7 @@ export class ModalInteraction implements JsonSerializable {
             title: this._title,
             //TODO: Restructure components to make this bit more typesafe
             components: this._components.map(component => 
-                new ActionRow().addComponents(component.toJSON()).toJSON())
+                new ActionRow().addComponents(component).toJSON())
         };
     }
 

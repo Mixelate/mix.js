@@ -2,16 +2,12 @@ import { JsonSerializable } from "../../../JsonSerializable";
 import { TextFieldStyle } from "../enum/TextFieldStyle";
 import { ApiTextField } from "../api/ApiTextField";
 import { ComponentType } from "../enum";
+import { Component } from "./Component";
 
-export class TextField implements JsonSerializable {
+export class TextField extends Component<ApiTextField> {
 
-    private data: ApiTextField
-
-    constructor(custom_id?: string) {
-        this.data = <ApiTextField> {
-            type: ComponentType.TEXT_INPUT,
-            custom_id: custom_id,
-        };
+    constructor() {
+        super(ComponentType.TEXT_FIELD);
     }
 
     public setCustomId(value: string): TextField {
@@ -52,10 +48,6 @@ export class TextField implements JsonSerializable {
     public setPlaceholder(value: string): TextField {
         this.data.placeholder = value;
         return this;
-    }
-
-    public toJSON(): ApiTextField {
-        return {...this.data};
     }
 
 }

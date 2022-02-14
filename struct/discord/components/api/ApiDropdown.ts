@@ -28,7 +28,7 @@ export interface ApiDropdown extends ApiComponent<ComponentType.DROPDOWN>, Ident
 
 export type DropdownMaxValues = number | 'MAX'
 
-export interface ApiMultiSelectDropdown extends ApiDropdown {
+export interface MultiSelectDropdownData extends ApiDropdown {
 
     min_values?: number
 
@@ -36,6 +36,6 @@ export interface ApiMultiSelectDropdown extends ApiDropdown {
 
 }
 
-export function IsMultiSelectDropdownData(dropdown: ApiDropdown): dropdown is ApiMultiSelectDropdown {
+export function IsMultiSelectDropdownData(dropdown: ApiDropdown): dropdown is MultiSelectDropdownData {
     return 'max_values' in dropdown
 }

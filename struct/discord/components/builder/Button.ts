@@ -1,14 +1,13 @@
 import { ButtonStyle } from "../enum/ButtonStyle";
 import { ComponentType } from "../enum/ComponentType";
-import { ApiBaseButton, ApiInteractButton, InteractButtonStyle, ApiLinkButton } from "../api/ApiButton";
+import { ApiBaseButton, ApiInteractButton, InteractButtonStyle, ApiLinkButton, ApiButton } from "../api/ApiButton";
 import { JsonSerializable } from "../../../JsonSerializable";
+import { Component } from "./Component";
 
-export abstract class Button<T extends ApiBaseButton> implements JsonSerializable {
+export abstract class Button<T extends ApiButton> extends Component<T> {
     
-    protected data: T;
-
-    constructor(data: T) {
-        this.data = data;
+    constructor() {
+        super(ComponentType.BUTTON);
     }
 
     public setLabel(value: string) {
@@ -22,21 +21,9 @@ export abstract class Button<T extends ApiBaseButton> implements JsonSerializabl
     public setDisabled(value: boolean) {
         this.data.disabled = value;
     }
-
-    public toJSON(): T {
-        return this.data;
-    }
 }
 
 export class InteractButton extends Button<ApiInteractButton> {
-
-    public constructor(custom_id?: string) {
-        super(<ApiInteractButton>{
-            type: ComponentType.BUTTON,
-            custom_id: custom_id || '',
-            style: ButtonStyle.SECONDARY
-        });
-    }
 
     public setCustomId(value: string) {
         this.data.custom_id = value;
@@ -49,13 +36,9 @@ export class InteractButton extends Button<ApiInteractButton> {
 
 export class LinkButton extends Button<ApiLinkButton> {
 
-    public constructor(url?: string) {
-        super(<ApiLinkButton>{
-            label: '',
-            type: ComponentType.BUTTON,
-            url: url || '',
-            style: ButtonStyle.LINK
-        });
+    public constructor() {
+        super();
+        this.data.style = ButtonStyle.LINK;
     }
 
     public setURL(value: string) {

@@ -3,7 +3,7 @@ import { ComponentType } from "../enum/ComponentType";
 import { TextFieldStyle } from "../enum/TextFieldStyle";
 import { ApiComponent } from "./ApiComponent";
 
-export interface ApiTextField extends ApiComponent<ComponentType.TEXT_INPUT>, Identifiable {
+export interface ApiTextField extends ApiComponent<ComponentType.TEXT_FIELD>, Identifiable {
 
     style: TextFieldStyle
 
@@ -21,7 +21,7 @@ export interface ApiTextField extends ApiComponent<ComponentType.TEXT_INPUT>, Id
 
 }
 
-export interface ApiTextFieldResponse extends ApiComponent<ComponentType.TEXT_INPUT>, Identifiable {
+export interface ApiTextFieldResponse extends ApiComponent<ComponentType.TEXT_FIELD>, Identifiable {
 
     value: string
 

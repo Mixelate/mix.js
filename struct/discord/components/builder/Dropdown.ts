@@ -1,5 +1,7 @@
 import { JsonSerializable } from "../../../JsonSerializable";
-import { ApiDropdown, DropdownMaxValues, ApiDropdownOption, IsMultiSelectDropdownData, ApiMultiSelectDropdown } from "../api/ApiDropdown";
+import { ApiDropdown, DropdownMaxValues, ApiDropdownOption, IsMultiSelectDropdownData, MultiSelectDropdownData } from "../api/ApiDropdown";
+import { ComponentType } from "../enum";
+import { Component } from "./Component";
 
 export class DropdownOption implements JsonSerializable {
 
@@ -40,12 +42,10 @@ export class DropdownOption implements JsonSerializable {
     }
 }
 
-export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> implements JsonSerializable {
+export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> extends Component<T> {
 
-    protected data: T;
-
-    constructor(data: T) {
-        this.data = data;
+    public constructor() {
+        super(ComponentType.DROPDOWN);
     }
 
     public setCustomId(value: string): Dropdown {
@@ -68,7 +68,7 @@ export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> implements J
         return this;
     }
 
-    public toJSON(): T {
+    public override toJSON(): T {
         //TODO: Validator
         if (IsMultiSelectDropdownData(this.data))
             if (this.data.max_values == 'MAX')
@@ -81,12 +81,11 @@ export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> implements J
 
 export class SingleSelectDropdown extends Dropdown<ApiDropdown> {}
 
-export class MultiSelectDropdown extends Dropdown<ApiMultiSelectDropdown> {
+export class MultiSelectDropdown extends Dropdown<MultiSelectDropdownData> {
 
     constructor() {
-        super(<ApiMultiSelectDropdown>{
-            max_values: "MAX"
-        })
+        super();
+        this.data.max_values = 'MAX'
     }
 
     public setMinimumSelections(value: number): MultiSelectDropdown {
