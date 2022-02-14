@@ -6,42 +6,81 @@ import { Component } from "./Component";
 
 export abstract class Button<T extends ApiButton> extends Component<T> {
     
-    constructor() {
+    protected constructor() {
         super(ComponentType.BUTTON);
     }
 
-    public setLabel(value: string) {
-        this.data.label = value;
-    }
+    public abstract label(value: string);
 
-    public setEmoji(value: string) {
-        this.data.emoji = value;
-    }
+    public abstract emoji(value: string);
 
-    public setDisabled(value: boolean) {
-        this.data.disabled = value;
-    }
+    public abstract disabled(value: boolean);
 }
 
 export class InteractButton extends Button<ApiInteractButton> {
 
-    public setCustomId(value: string) {
-        this.data.custom_id = value;
+    private constructor() {
+        super();
     }
 
-    public setStyle(value: InteractButtonStyle) {
+    public static new(): InteractButton {
+        return new InteractButton();
+    }
+
+    public label(value: string): InteractButton {
+        this.data.label = value;
+        return this;
+    }
+
+    public emoji(value: string): InteractButton {
+        this.data.emoji = value;
+        return this;
+    }
+
+    public disabled(value: boolean): InteractButton {
+        this.data.disabled = value;
+        return this;
+    }
+
+    public id(value: string): InteractButton {
+        this.data.custom_id = value;
+        return this;
+    }
+
+    public style(value: InteractButtonStyle) : InteractButton {
         this.data.style = value;
+        return this;
     }
 }
 
 export class LinkButton extends Button<ApiLinkButton> {
 
-    public constructor() {
+    private constructor() {
         super();
         this.data.style = ButtonStyle.LINK;
     }
 
-    public setURL(value: string) {
+    public static new(): LinkButton {
+        return new LinkButton();
+    }
+
+    public label(value: string): LinkButton {
+        this.data.label = value;
+        return this;
+    }
+
+    public emoji(value: string): LinkButton {
+        this.data.emoji = value;
+        return this;
+    }
+
+    public disabled(value: boolean): LinkButton {
+        this.data.disabled = value;
+        return this;
+    }
+
+    public url(value: string): LinkButton {
         this.data.url = value;
+        return this;
     }
 }

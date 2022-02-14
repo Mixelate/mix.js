@@ -35,10 +35,14 @@ export interface ApiLinkButton extends ApiBaseButton, ApiComponent<ComponentType
 
 export type ApiButton = ApiInteractButton | ApiLinkButton;
 
-export function IsInteractButtonData(buttonData: ApiButton): buttonData is ApiInteractButton {
+export function IsApiButton(component: ApiComponent<ComponentType>): component is ApiButton {
+    return component.type == ComponentType.BUTTON;
+}
+
+export function IsApiInteractButton(buttonData: ApiButton): buttonData is ApiInteractButton {
     return !('url' in buttonData)
 }
 
-export function IsLinkButtonData(buttonData: ApiButton): buttonData is ApiLinkButton {
+export function IsApiLinkButton(buttonData: ApiButton): buttonData is ApiLinkButton {
     return 'url' in buttonData
 }

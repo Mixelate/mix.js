@@ -26,3 +26,7 @@ export interface ApiTextFieldResponse extends ApiComponent<ComponentType.TEXT_FI
     value: string
 
 }
+
+export function IsApiTextField(component: ApiComponent<ComponentType>): component is ApiTextField {
+    return component.type == ComponentType.TEXT_FIELD;
+}

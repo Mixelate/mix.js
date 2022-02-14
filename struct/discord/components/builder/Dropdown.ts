@@ -1,5 +1,5 @@
 import { JsonSerializable } from "../../../JsonSerializable";
-import { ApiDropdown, DropdownMaxValues, ApiDropdownOption, IsMultiSelectDropdownData, MultiSelectDropdownData } from "../api/ApiDropdown";
+import { ApiDropdown, DropdownMaxValues, ApiDropdownOption, IsApiMultiSelectDropdown, MultiSelectDropdownData } from "../api/ApiDropdown";
 import { ComponentType } from "../enum";
 import { Component } from "./Component";
 
@@ -7,29 +7,33 @@ export class DropdownOption implements JsonSerializable {
 
     protected data: ApiDropdownOption
 
-    constructor() {
+    private constructor() {
         this.data = {
             label: '',            
         };
     }
 
-    public setLabel(value: string) {
+    public static new(): DropdownOption {
+        return new DropdownOption();
+    }
+
+    public label(value: string) {
         this.data.label = value;
     }
 
-    public setValue(value: string) {
+    public value(value: string) {
         this.data.value = value;
     }
 
-    public setDescription(value: string) {
+    public description(value: string) {
         this.data.description = value;
     }
 
-    public setEmoji(value: string) {
+    public emoji(value: string) {
         this.data.emoji = value;
     }
 
-    public setDefault(value: boolean) {
+    public default(value: boolean) {
         this.data.default = value
     }
 
@@ -44,33 +48,33 @@ export class DropdownOption implements JsonSerializable {
 
 export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> extends Component<T> {
 
-    public constructor() {
+    protected constructor() {
         super(ComponentType.DROPDOWN);
     }
 
-    public setCustomId(value: string): Dropdown {
+    public customId(value: string): Dropdown {
         this.data.custom_id = value;
         return this;
     }
 
-    public addOptions(...options: DropdownOption[]): Dropdown {
+    public options(...options: DropdownOption[]): Dropdown {
         this.data.options.push(...options.map(option => option.toJSON()));
         return this;
     }
 
-    public setPlaceholder(value: string): Dropdown {
+    public placeholder(value: string): Dropdown {
         this.data.placeholder = value;
         return this;
     }
 
-    public setDisabled(value: boolean): Dropdown {
+    public disabled(value: boolean): Dropdown {
         this.data.disabled = value;
         return this;
     }
 
     public override toJSON(): T {
         //TODO: Validator
-        if (IsMultiSelectDropdownData(this.data))
+        if (IsApiMultiSelectDropdown(this.data))
             if (this.data.max_values == 'MAX')
                 this.data.max_values = this.data.options.length;
 
@@ -79,21 +83,31 @@ export abstract class Dropdown<T extends ApiDropdown = ApiDropdown> extends Comp
 
 }
 
-export class SingleSelectDropdown extends Dropdown<ApiDropdown> {}
+export class SingleSelectDropdown extends Dropdown<ApiDropdown> {
+
+    public static new(): SingleSelectDropdown {
+        return new SingleSelectDropdown();
+    }
+
+}
 
 export class MultiSelectDropdown extends Dropdown<MultiSelectDropdownData> {
 
-    constructor() {
+    private constructor() {
         super();
         this.data.max_values = 'MAX'
     }
 
-    public setMinimumSelections(value: number): MultiSelectDropdown {
+    public static new(): MultiSelectDropdown {
+        return new MultiSelectDropdown();
+    }
+
+    public minimumSelections(value: number): MultiSelectDropdown {
         this.data.min_values = value;
         return this;
     }
 
-    public setMaximumSelections(value: DropdownMaxValues): MultiSelectDropdown {
+    public maximumSelections(value: DropdownMaxValues): MultiSelectDropdown {
         this.data.max_values = value;
         return this;
     }

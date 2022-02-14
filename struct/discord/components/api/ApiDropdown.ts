@@ -36,6 +36,10 @@ export interface MultiSelectDropdownData extends ApiDropdown {
 
 }
 
-export function IsMultiSelectDropdownData(dropdown: ApiDropdown): dropdown is MultiSelectDropdownData {
-    return 'max_values' in dropdown
+export function IsApiDropdown(component: ApiComponent<ComponentType>): component is ApiDropdown {
+    return component.type == ComponentType.DROPDOWN;
+}
+
+export function IsApiMultiSelectDropdown(dropdown: ApiDropdown): dropdown is MultiSelectDropdownData {
+    return 'max_values' in dropdown;
 }

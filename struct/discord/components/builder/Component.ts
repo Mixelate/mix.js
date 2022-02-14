@@ -2,7 +2,7 @@ import { JsonSerializable } from "../../../JsonSerializable";
 import { ApiComponent } from "../api";
 import { ComponentType } from "../enum";
 
-export abstract class Component<T extends ApiComponent<ComponentType>> implements JsonSerializable {
+export abstract class Component<T extends ApiComponent<ComponentType> = ApiComponent> implements JsonSerializable {
 
     protected data: T
     
