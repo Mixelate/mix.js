@@ -6,19 +6,11 @@ import { ApiModalInteraction } from "../data";
 
 export class ModalInteraction implements JsonSerializable {
 
-    public interactionId: string = '';
-    public interactionToken: string = '';
     public _id: string = '';
     public _title: string = '';
     public _components: TextField[] = [];
 
     private constructor() {}
-
-    public replyingInteraction(interaction: Interaction): ModalInteraction {
-        this.interactionId = interaction.id;
-        this.interactionToken = interaction.token;
-        return this;
-    }
 
     public static new(): ModalInteraction {
         return new ModalInteraction();
@@ -40,12 +32,6 @@ export class ModalInteraction implements JsonSerializable {
     }
 
     public toJSON(): any {
-        if (!this.interactionId)
-            throw new ValidationError('Failed to validate modal interaction response: Falsy interaction ID');
-
-        if (!this.interactionToken)
-            throw new ValidationError('Failed to validate modal interaction response: Falsy interaction token');
-
         if (!this._id)
             throw new ValidationError('Failed to validate modal interaction response: Falsy modal ID');
 
