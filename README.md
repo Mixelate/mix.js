@@ -1,6 +1,6 @@
 ## 💥 Apliko: A TypeScript Discord.js framework
 
-Apliko is a Discord.js framework aimed at ```making the work of professionals easier and faster```. It provides older implementations of Discord API components to make both implementation and execution faster. On top of that it uses a collection of applications to accomplish common tasks in Discord bots. These include slash commands, channel controllers, questionnaires, and panels. 
+Apliko is a Discord.js framework aimed at ```making the work of professionals easier and faster```. It uses a collection of applications to accomplish common tasks in Discord bots. These include slash commands, channel controllers, questionnaires, and panels. 
 
 ## Use Apliko in your project
 Apliko has not yet been published to NPM so you'll have to add a file dependency. Simply clone this repository into a new folder, and add this line to your depdendencies in package.json
