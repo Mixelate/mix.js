@@ -14,3 +14,7 @@ export interface ApiModalInteractionData extends Identifiable {
     components: ApiActionRow<ApiTextFieldResponse>[]
 
 }
+
+export function IsApiModalInteraction(baseInteraction: ApiBaseInteraction<InteractionType>): baseInteraction is ApiModalInteraction {
+    return baseInteraction.type == 5
+}

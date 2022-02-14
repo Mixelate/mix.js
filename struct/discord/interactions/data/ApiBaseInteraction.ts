@@ -8,8 +8,12 @@ export interface ApiBaseInteraction<T extends InteractionType> {
 
     application_id: string
 
+    guild?: {
+        id: string
+    }
+
     // TODO: Proper typings
-    member: {
+    member?: {
         user: {
             id: string
         }
