@@ -1,7 +1,7 @@
 import { Routes } from "discord-api-types/v9";
 import { GuildMember, GuildMemberResolvable, Interaction, Message } from "discord.js";
 import { AplikoBot } from "../Bot";
-import { ApiBaseInteraction, ApiModalInteraction, FormCollectionKey, InteractionType, IsApiModalInteraction } from "../struct";
+import { ApiBaseInteraction, ApiModalSubmitInteraction, FormCollectionKey, InteractionType, IsApiModalInteraction } from "../struct";
 import { ComponentCollectionKey } from "../struct/apliko/collector/ComponentCollectionKey";
 import { MessageCollectionKey } from "../struct/apliko/collector/MessageCollectionKey";
 import { ModalSubmitInteraction } from "../struct/discord/interactions/parser/ModalSubmitInteraction";
@@ -23,16 +23,13 @@ export class CollectorManager {
         bot.client.on('interactionCreate', this.onInteractionCreate.bind(this))
         bot.client.ws.on('INTERACTION_CREATE', (interaction: ApiBaseInteraction<InteractionType>) => {
             if (IsApiModalInteraction(interaction)) {
-                const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalInteraction)
+                const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalSubmitInteraction)
 
-                    this._awaitingForm.forEach((deferredValues, formCollectionKey) => {
+                    this._awaitingForm.forEach(async (deferredValues, formCollectionKey) => {
                         if (modalSubmitInteraction.getUserId() != formCollectionKey.userId) return
                         if (modalSubmitInteraction.getChannelId() != formCollectionKey.channelId) return
             
-                        deferredValues.resolve?.(modalSubmitInteraction.getValues())
-                        this._awaitingForm.delete(formCollectionKey)
-
-                        bot.rest.post(
+                        await bot.rest.post(
                             Routes.interactionCallback(interaction.id, interaction.token),
                             {
                                 'body': {
@@ -40,6 +37,9 @@ export class CollectorManager {
                                 }
                             }
                         )
+
+                        deferredValues.resolve?.(modalSubmitInteraction.getValues())
+                        this._awaitingForm.delete(formCollectionKey)
                     })
             }
         })

@@ -1,21 +1,27 @@
-import { ApiModalInteraction } from "../data";
+import { ApiModalSubmitInteraction } from "../data";
 
 export class ModalSubmitInteraction {
 
+    private readonly customId: string;
     private readonly channelId: string;
     private readonly userId: string;
     private readonly values: Map<string, string>;
 
-    constructor(apiInteraction: ApiModalInteraction) {
-        this.channelId = apiInteraction.channel_id;
-        this.userId = apiInteraction.member!.user.id;
+    constructor(data: ApiModalSubmitInteraction) {
+        this.customId = data.data.custom_id;
+        this.channelId = data.channel_id;
+        this.userId = data.member!.user.id;
         this.values = new Map();
 
-        apiInteraction.data.components.forEach(actionRow => {
+        data.data.components.forEach(actionRow => {
             actionRow.components.forEach(textField => {
                 this.values.set(textField.custom_id, textField.value);
             })
         })
+    }
+
+    public getCustomId() {
+        return this.customId
     }
 
     public getChannelId() {

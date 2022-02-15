@@ -1,6 +1,7 @@
 import { Message } from "discord.js"
-import { ButtonInteractionContext, SelectMenuInteractionContext } from "../../struct/apliko/Contexts"
-import { ButtonCallbacks, LoadCallbacks, MessageCallbacks, SelectCallbacks, StopCallbacks } from "../DecoratorSymbols"
+import { ButtonInteractionContext, ModalInteractionContext, SelectMenuInteractionContext } from "../../struct/apliko/Contexts"
+import { ButtonCallbacks, LoadCallbacks, MessageCallbacks, ModalCallbacks, SelectCallbacks, StopCallbacks } from "../DecoratorSymbols"
+import { ModalCallback } from "./ModalCallback"
 
 export interface CallbackHandler {
     loadCallbacks?: (() => Promise<any>)[]
@@ -8,6 +9,7 @@ export interface CallbackHandler {
     buttonCallbacks?: Map<string, (context: ButtonInteractionContext) => Promise<any>>
     selectCallbacks?: Map<string, (context: SelectMenuInteractionContext) => Promise<any>>
     messageCallbacks?: ((message: Message) => Promise<any>)[]
+    modalCallbacks?: Map<string, (context: ModalInteractionContext) => Promise<any>>;
 }
 
 export type CallbackHandlerConstructor = { new(...args: any[]): CallbackHandler }
@@ -21,6 +23,7 @@ export function RegisterCallbacks<T extends CallbackHandlerConstructor>(Class: T
             const buttonCallbacks = Class.prototype[ButtonCallbacks]
             const selectCallbacks = Class.prototype[SelectCallbacks]
             const messageCallbacks = Class.prototype[MessageCallbacks]
+            const modalCallbacks = Class.prototype[ModalCallbacks]
 
             if (this.loadCallbacks && loadCallbacks)
                 for (const callback of loadCallbacks)
@@ -41,6 +44,10 @@ export function RegisterCallbacks<T extends CallbackHandlerConstructor>(Class: T
             if (this.messageCallbacks && messageCallbacks)
                 for (const callback of messageCallbacks)
                     this.messageCallbacks.push(callback)
+
+            if (this.modalCallbacks && modalCallbacks)
+                for (const [customId, callback] of modalCallbacks)
+                    this.modalCallbacks.set(customId, callback)
         }
     }
 }

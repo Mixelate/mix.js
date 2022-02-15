@@ -4,6 +4,7 @@ export const StopCallbacks = Symbol('___StopCallbacks')
 export const ButtonCallbacks = Symbol('___ButtonCallbacks')
 export const SelectCallbacks = Symbol('___SelectCallbacks')
 export const MessageCallbacks = Symbol('___MessageCallbacks')
+export const ModalCallbacks = Symbol('___ModalCallbacks')
 
 // Wildcard used for callbacks that usually require a filter
 export const CALLBACK_WILDCARD = '*'

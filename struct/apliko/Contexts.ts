@@ -1,4 +1,5 @@
 import { ButtonInteraction, SelectMenuInteraction } from "discord.js"
+import { ModalSubmitInteraction } from "../discord/interactions/parser/ModalSubmitInteraction"
 import { ComponentInteractionDataModel } from "./ComponentInteractionData"
 
 export interface InteractionContext {
@@ -11,4 +12,8 @@ export interface ButtonInteractionContext extends InteractionContext {
 
 export interface SelectMenuInteractionContext extends InteractionContext {
     interaction: SelectMenuInteraction
+}
+
+export interface ModalInteractionContext extends InteractionContext {
+    interaction: ModalSubmitInteraction
 }

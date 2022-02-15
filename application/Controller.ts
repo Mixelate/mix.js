@@ -4,8 +4,10 @@ import { CallbackHandler } from '../decorator'
 import { CALLBACK_WILDCARD } from '../decorator/DecoratorSymbols'
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../util/conversion/AplikoEmbed'
 import { SilentCatch, ThrowError } from '../util/Errors'
-import { ButtonInteractionContext, SelectMenuInteractionContext } from '../struct/apliko/Contexts'
+import { ButtonInteractionContext, ModalInteractionContext, SelectMenuInteractionContext } from '../struct/apliko/Contexts'
 import { FetchComponentInteractionData } from '../struct/apliko/ComponentInteractionData'
+import { ApiBaseInteraction, ApiModalSubmitInteraction, InteractionType, IsApiModalInteraction } from '../struct'
+import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction'
 
 export class Controller implements CallbackHandler {
 
@@ -20,6 +22,7 @@ export class Controller implements CallbackHandler {
     public messageCallbacks: ((message: Message) => Promise<any>)[]
     public buttonCallbacks: Map<string, (context: ButtonInteractionContext) => Promise<any>>
     public selectCallbacks: Map<string, (context: SelectMenuInteractionContext) => Promise<any>>
+    public modalCallbacks: Map<string, (context: ModalInteractionContext) => Promise<any>>
 
     public constructor(bot: AplikoBot, channelId: string) {
         this._bot = bot
@@ -32,6 +35,19 @@ export class Controller implements CallbackHandler {
         this.messageCallbacks = []
         this.buttonCallbacks = new Map()
         this.selectCallbacks = new Map()
+        this.modalCallbacks = new Map()
+
+        bot.client.ws.on('INTERACTION_CREATE', async (interaction: ApiBaseInteraction<InteractionType>) => {
+            if (IsApiModalInteraction(interaction)) {
+                const modalSubmitInteraction = new ModalSubmitInteraction(interaction as ApiModalSubmitInteraction);
+                const componentInteractionData = await FetchComponentInteractionData(modalSubmitInteraction.getCustomId())
+                await this.modalCallbacks.get(componentInteractionData.componentId)
+                    ?.apply(this, [<ModalInteractionContext>{
+                        interaction: modalSubmitInteraction,
+                        data: componentInteractionData
+                    }])
+            }
+        });
     }
 
     public async load() {

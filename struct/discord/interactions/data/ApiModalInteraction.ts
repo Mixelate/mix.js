@@ -3,18 +3,18 @@ import { Identifiable } from "../../Identifiable";
 import { InteractionType } from "../enum";
 import { ApiBaseInteraction } from "./ApiBaseInteraction";
 
-export interface ApiModalInteraction extends ApiBaseInteraction<InteractionType.MODAL_SUBMIT> {
+export interface ApiModalSubmitInteraction extends ApiBaseInteraction<InteractionType.MODAL_SUBMIT> {
 
-    data: ApiModalInteractionData
-
-}
-
-export interface ApiModalInteractionData extends Identifiable {
-
-    components: ApiActionRow<ApiTextFieldResponse>[]
+    data: ApiModalSubmitInteractionData;
 
 }
 
-export function IsApiModalInteraction(baseInteraction: ApiBaseInteraction<InteractionType>): baseInteraction is ApiModalInteraction {
-    return baseInteraction.type == 5
+export interface ApiModalSubmitInteractionData extends Identifiable {
+
+    components: ApiActionRow<ApiTextFieldResponse>[];
+
+}
+
+export function IsApiModalInteraction(baseInteraction: ApiBaseInteraction<InteractionType>): baseInteraction is ApiModalSubmitInteraction {
+    return baseInteraction.type == 5;
 }

@@ -1,4 +1,5 @@
-import { ChannelResolvable, GuildMemberResolvable, InteractionResponseType } from "discord.js";
+import { ChannelResolvable, GuildMemberResolvable } from "discord.js";
+import { InteractionResponseType } from "../../discord";
 
 export interface FormCollectionKey {
 
