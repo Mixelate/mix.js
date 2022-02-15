@@ -1,4 +1,4 @@
-import { ChannelResolvable, GuildMemberResolvable } from "discord.js";
+import { ChannelResolvable, GuildMemberResolvable, InteractionResponseType } from "discord.js";
 
 export interface FormCollectionKey {
 
@@ -7,5 +7,7 @@ export interface FormCollectionKey {
     channelId: string;
 
     modalId: string;
+
+    responseType?: InteractionResponseType
 
 }

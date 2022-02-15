@@ -31,16 +31,16 @@ export class CollectorManager {
             
                         deferredValues.resolve?.(modalSubmitInteraction.getValues())
                         this._awaitingForm.delete(formCollectionKey)
-                    })
 
-                    bot.rest.post(
-                        Routes.interactionCallback(interaction.id, interaction.token),
-                        {
-                            'body': {
-                                type: 6
+                        bot.rest.post(
+                            Routes.interactionCallback(interaction.id, interaction.token),
+                            {
+                                'body': {
+                                    type: formCollectionKey.responseType ? formCollectionKey.responseType : 6
+                                }
                             }
-                        }
-                    )
+                        )
+                    })
             }
         })
     }
