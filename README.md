@@ -11,6 +11,86 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 ## Docs
 Incomplete, but some information can be seen below
 
+## Getting Started
+Here's some code to get your simple bot up and running
+```typescript
+import { AplikoBot } from 'apliko';
+
+const bot = new AplikoBot(
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_VOICE_STATES,
+    ],
+    token: '<YOUR_BOT_TOKEN>'
+);
+
+bot.client.on('ready', async () => {
+    // Do something
+});
+
+bot.login();
+```
+Simple enough, right?  Well you may find yourself in a situation where you'd like to add some properties in the AplikoBot class since it get's passed as a parameter to all other Apliko classes, for example a connection to a database, a websocket connection, or maybe a payment gateway. While there's many ways to go about adding these properties I recommend using basic class inheritance to mix your properties into existing Apliko classes. Here's an example of a slash command using my own AplikoBot class.
+```typescript
+export class InheritBot extends AplikoBot {
+
+    private _database: Database;
+
+    public constructor() {
+        super(
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MEMBERS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+                Intents.FLAGS.GUILD_VOICE_STATES,
+            ],
+            token: 'YOUR_BOT_TOKEN'
+        );
+        
+        this._database = new Database();
+        this.commands.registerCommands(new MySlashCommand(this));
+    }
+    
+    public get database() {
+        return this._database;
+    }
+
+}
+
+export class InheritSlashCommand extends SlashCommand {
+    
+    private _myBot: InheritBot;
+    
+    constructor(myBot: InheritBot) {
+        super(myBot); // Pass myBot to the SlashCommand constructor since it extends AplikoBot
+        this._myBot = myBot; // Store myBot in a separate variable so we save the types
+    }
+    
+    // Override the getter for AplikoBot to return InheritBot instead
+    override get bot(): MyBot {
+        return this._myBot
+    }
+    
+}
+
+@DefineCommand
+@NameCommand('rnchannel')
+@DescribeCommand('Rename a channel')
+export class MySlashCommand extends InheritSlashCommand {
+    
+    // channel and newName command options are automatically detected, more on that later ;)
+    @CommandExecutor
+    public async execute(interaction: CommandInteraction, channel: TextChannel, newName: string) {
+        // Rename the channel...
+    }
+    
+}
+```
+
 ## Global Interaction Handlers
 Creating a global interaction handler means you'll recieve ```all``` interactionCreate events. It's recommended for components that can exist in multiple places at the same time. To create a global interaction handler, you have to extend the InteractionHandler class and decorate your functions as callbacks.
 ```typescript
