@@ -4,9 +4,9 @@ import { Interaction } from "discord.js";
 import { AplikoBot, APLIKO_OPTIONS } from "../../Bot";
 import { Modal } from "../../struct/discord/interactions/builder";
 
-export async function InteractionReplyModal(bot: AplikoBot, interaction: Interaction, modalInteraction: Modal) {
+export async function InteractionReplyModal(interaction: Interaction, modalInteraction: Modal) {
     const rest = new REST().setToken(interaction.client.token!);
-    await bot.rest.post(
+    await rest.post(
         Routes.interactionCallback(interaction.id, interaction.token),
         {
             'body': {
