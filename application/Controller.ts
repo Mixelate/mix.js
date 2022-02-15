@@ -134,7 +134,6 @@ export class Controller implements CallbackHandler {
           ]);
       }
     } catch (error: any) {
-      console.log(error);
       await interaction.deferReply({ ephemeral: true }).catch((_) => {});
       await interaction.editReply({
         embeds: AplikoBuildEmbeds({
