@@ -25,6 +25,7 @@
     "shrink-string": "^3.0.9"
   },
   "devDependencies": {
-    "@types/nedb": "^1.8.12"
+    "@types/nedb": "^1.8.12",
+    "prettier": "2.5.1"
   }
 }

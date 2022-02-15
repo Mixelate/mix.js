@@ -2,13 +2,11 @@ import { ChannelResolvable, GuildMemberResolvable } from "discord.js";
 import { InteractionResponseType } from "../../discord";
 
 export interface FormCollectionKey {
+  userId: string;
 
-    userId: string;
+  channelId: string;
 
-    channelId: string;
+  modalId: string;
 
-    modalId: string;
-
-    responseType?: InteractionResponseType
-
+  responseType?: InteractionResponseType;
 }

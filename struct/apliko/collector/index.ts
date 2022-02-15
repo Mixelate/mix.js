@@ -1,3 +1,3 @@
-export * from './ComponentCollectionKey';
-export * from './MessageCollectionKey';
-export * from './ModalCollectionKey';
+export * from "./ComponentCollectionKey";
+export * from "./MessageCollectionKey";
+export * from "./ModalCollectionKey";

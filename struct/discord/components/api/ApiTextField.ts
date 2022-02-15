@@ -3,30 +3,32 @@ import { ComponentType } from "../enum/ComponentType";
 import { TextFieldStyle } from "../enum/TextFieldStyle";
 import { ApiComponent } from "./ApiComponent";
 
-export interface ApiTextField extends ApiComponent<ComponentType.TEXT_FIELD>, Identifiable {
+export interface ApiTextField
+  extends ApiComponent<ComponentType.TEXT_FIELD>,
+    Identifiable {
+  style: TextFieldStyle;
 
-    style: TextFieldStyle
+  label: string;
 
-    label: string
+  min_length?: number;
 
-    min_length?: number
+  max_length?: number;
 
-    max_length?: number
+  required?: boolean;
 
-    required?: boolean
+  value?: string;
 
-    value?: string
-
-    placeholder?: string
-
+  placeholder?: string;
 }
 
-export interface ApiTextFieldResponse extends ApiComponent<ComponentType.TEXT_FIELD>, Identifiable {
-
-    value: string
-
+export interface ApiTextFieldResponse
+  extends ApiComponent<ComponentType.TEXT_FIELD>,
+    Identifiable {
+  value: string;
 }
 
-export function IsApiTextField(component: ApiComponent<ComponentType>): component is ApiTextField {
-    return component.type == ComponentType.TEXT_FIELD;
+export function IsApiTextField(
+  component: ApiComponent<ComponentType>
+): component is ApiTextField {
+  return component.type == ComponentType.TEXT_FIELD;
 }

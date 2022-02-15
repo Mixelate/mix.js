@@ -5,5 +5,5 @@ import { Message } from "discord.js";
  * client side bugs that show deleted messages
  */
 export const SafeDeleteMessage = (message: Message) => {
-    setTimeout(() => message.delete().catch(() => {}), 50)
-}
+  setTimeout(() => message.delete().catch(() => {}), 50);
+};

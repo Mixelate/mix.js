@@ -1,25 +1,23 @@
-import { InteractionType } from "../enum"
+import { InteractionType } from "../enum";
 
 export interface ApiBaseInteraction<T extends InteractionType> {
+  readonly type: T;
 
-    readonly type: T
+  id: string;
+  token: string;
 
-    id: string
-    token: string
+  application_id: string;
 
-    application_id: string
+  guild?: {
+    id: string;
+  };
 
-    guild?: {
-        id: string
-    }
+  // TODO: Proper typings
+  member?: {
+    user: {
+      id: string;
+    };
+  };
 
-    // TODO: Proper typings
-    member?: {
-        user: {
-            id: string
-        }
-    }
-
-    channel_id: string
-
+  channel_id: string;
 }

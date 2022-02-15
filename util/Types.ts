@@ -1,1 +1,1 @@
-export type AnyClass = { new (...args: any[]): any }
+export type AnyClass = { new (...args: any[]): any };

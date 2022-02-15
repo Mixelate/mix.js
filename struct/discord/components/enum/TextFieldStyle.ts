@@ -1,4 +1,4 @@
 export enum TextFieldStyle {
-    SHORT = 1,
-    PARAGRAPH = 2
+  SHORT = 1,
+  PARAGRAPH = 2,
 }

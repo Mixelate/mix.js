@@ -1,6 +1,11 @@
-import { ChannelResolvable, GuildMemberResolvable, MessageResolvable, UserResolvable } from "discord.js";
+import {
+  ChannelResolvable,
+  GuildMemberResolvable,
+  MessageResolvable,
+  UserResolvable,
+} from "discord.js";
 
 export interface MessageCollectionKey {
-    userResolvable: UserResolvable
-    channelResolvable: ChannelResolvable
+  userResolvable: UserResolvable;
+  channelResolvable: ChannelResolvable;
 }

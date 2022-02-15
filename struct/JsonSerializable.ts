@@ -1,3 +1,3 @@
 export interface JsonSerializable {
-    toJSON(): any
+  toJSON(): any;
 }

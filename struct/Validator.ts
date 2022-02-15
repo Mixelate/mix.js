@@ -1,3 +1,3 @@
 export interface Validator<T> {
-    validate(data: T): boolean
+  validate(data: T): boolean;
 }

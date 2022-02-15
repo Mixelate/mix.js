@@ -1,3 +1,3 @@
 export interface Identifiable {
-    custom_id: string
+  custom_id: string;
 }
