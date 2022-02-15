@@ -1,2 +1,2 @@
-export * from "./AplikoCommand";
-export * from "./AplikoSubCommand";
+export * from './AplikoCommand';
+export * from './AplikoSubCommand';
