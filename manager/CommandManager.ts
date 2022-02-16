@@ -1,3 +1,4 @@
+import { ApplicationCommandOptionType } from "discord-api-types";
 import { Guild, Interaction } from "discord.js";
 import { Command } from "../application/Command";
 import { AplikoBot } from "../Bot";
@@ -36,7 +37,7 @@ export class CommandManager {
           `Skipped command registration on guild: ${guild.id} (Failed to resolve guild)`
         );
 
-      this.createCommandsInGuild(resolvedGuild).catch((_) => {});
+      this.createCommandsInGuild(resolvedGuild).catch((_) => { });
     });
   }
 
@@ -56,8 +57,58 @@ export class CommandManager {
 
         if (!matchingCommand) return guildCommand.delete();
 
-        guild.commands.edit(guildCommand, matchingCommand.build().toJSON());
+        const compiledCommand = matchingCommand.build()
+        let edit = false;
 
+        if (guildCommand.description != compiledCommand.description)
+          edit = true;
+
+        if (!edit && guildCommand.options.length != compiledCommand.options.length)
+          edit = true;
+
+        if (!edit)
+          for (const guildCommandOption of guildCommand.options) {
+            const matchingOption = compiledCommand.options
+              .map(option => option.toJSON())
+              .find(option => option.name = guildCommandOption.name)
+
+            if (!matchingOption) {
+              edit = true;
+              break;
+            }
+
+            if (matchingOption.description != guildCommandOption.description) {
+              edit = true;
+              break;
+            }
+
+            if (('required' in guildCommandOption) && matchingOption.required != guildCommandOption.required) {
+              edit = true;
+              break;
+            }
+
+            if (
+              (guildCommandOption.type === 'SUB_COMMAND' && matchingOption.type != ApplicationCommandOptionType.Subcommand)
+              || (guildCommandOption.type === 'SUB_COMMAND_GROUP' && matchingOption.type != ApplicationCommandOptionType.SubcommandGroup)
+              || (guildCommandOption.type === 'STRING' && matchingOption.type != ApplicationCommandOptionType.String)
+              || (guildCommandOption.type === 'INTEGER' && matchingOption.type != ApplicationCommandOptionType.Integer)
+              || (guildCommandOption.type === 'BOOLEAN' && matchingOption.type != ApplicationCommandOptionType.Boolean)
+              || (guildCommandOption.type === 'USER' && matchingOption.type != ApplicationCommandOptionType.User)
+              || (guildCommandOption.type === 'CHANNEL' && matchingOption.type != ApplicationCommandOptionType.Channel)
+              || (guildCommandOption.type === 'ROLE' && matchingOption.type != ApplicationCommandOptionType.Role)
+              || (guildCommandOption.type === 'MENTIONABLE' && matchingOption.type != ApplicationCommandOptionType.Mentionable)
+              || (guildCommandOption.type === 'NUMBER' && matchingOption.type != ApplicationCommandOptionType.Number)
+            ) {
+              edit = true;
+              break;
+            }
+          }
+
+        if (edit)
+          guild.commands.edit(guildCommand, compiledCommand.toJSON());
+        else
+          console.log('No edits required for command: ' + compiledCommand.name
+          )
         commandsToRegister = commandsToRegister.filter(
           (command) => command !== matchingCommand
         );
