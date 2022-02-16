@@ -1,4 +1,4 @@
-import { AplikoEmbed } from "../../util/conversion/AplikoEmbed";
+import { AplikoEmbed, AplikoEmbedStyle } from "../../util/conversion/AplikoEmbed";
 import { AplikoComponent } from "../../util/conversion/AplikoComponent";
 import {
   ButtonInteractionContext,
@@ -12,11 +12,10 @@ import {
 } from "./PanelContext";
 import { AplikoBot } from "../../Bot";
 import { ComponentInteractionDataModel } from "../../struct/apliko/ComponentInteractionData";
+import { ActionRow, Component, ComponentType, PageContent } from "../../struct";
 
-export class PanelPage implements CallbackHandler {
+export abstract class PanelPage implements CallbackHandler {
   private _bot: AplikoBot;
-  private readonly _embeds: AplikoEmbed[];
-  private readonly _components: AplikoComponent[][];
 
   public buttonCallbacks: Map<
     string,
@@ -27,16 +26,24 @@ export class PanelPage implements CallbackHandler {
     (context: SelectMenuInteractionContext) => Promise<any>
   >;
 
-  constructor(
-    bot: AplikoBot,
-    embeds: AplikoEmbed[],
-    components: AplikoComponent[][]
-  ) {
+  public constructor(bot: AplikoBot) {
     this._bot = bot;
-    this._embeds = embeds;
-    this._components = components;
     this.buttonCallbacks = new Map();
     this.selectCallbacks = new Map();
+  }
+
+  public async constructPage(context: PanelContext): Promise<PageContent> {
+    return {
+      embeds: [
+        <AplikoEmbed>{
+          style: AplikoEmbedStyle.ERROR,
+          description: 'Page not configured.'
+        }
+      ],
+      components: [
+
+      ]
+    }
   }
 
   public async onButton(
@@ -55,13 +62,5 @@ export class PanelPage implements CallbackHandler {
 
   get bot() {
     return this._bot;
-  }
-
-  get embeds(): AplikoEmbed[] {
-    return this._embeds;
-  }
-
-  get components(): AplikoComponent[][] {
-    return this._components;
   }
 }

@@ -22,24 +22,29 @@ export class DropdownOption implements JsonSerializable {
     return new DropdownOption();
   }
 
-  public label(value: string) {
+  public label(value: string): DropdownOption {
     this.data.label = value;
+    return this;
   }
 
-  public value(value: string) {
+  public value(value: string): DropdownOption {
     this.data.value = value;
+    return this;
   }
 
-  public description(value: string) {
+  public description(value: string): DropdownOption {
     this.data.description = value;
+    return this;
   }
 
-  public emoji(value: string) {
+  public emoji(value: string): DropdownOption {
     this.data.emoji = value;
+    return this;
   }
 
-  public default(value: boolean) {
+  public default(value: boolean): DropdownOption {
     this.data.default = value;
+    return this;
   }
 
   public toJSON(): ApiDropdownOption {
@@ -52,7 +57,7 @@ export class DropdownOption implements JsonSerializable {
 
 export abstract class Dropdown<
   T extends ApiDropdown = ApiDropdown
-> extends Component<T> {
+  > extends Component<T> {
   protected constructor() {
     super(ComponentType.DROPDOWN);
   }
@@ -62,8 +67,15 @@ export abstract class Dropdown<
     return this;
   }
 
-  public options(...options: DropdownOption[]): Dropdown {
-    this.data.options.push(...options.map((option) => option.toJSON()));
+  public options(...options: (DropdownOption | undefined)[]): Dropdown {
+    if (!this.data.options)
+      this.data.options = [];
+      
+    this.data.options.push(
+      ...options
+        .filter(option => option != undefined)
+        .map((option) => option!.toJSON())
+    );
     return this;
   }
 

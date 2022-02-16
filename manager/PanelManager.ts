@@ -10,6 +10,7 @@ import { FetchComponentInteractionData } from "../struct/apliko/ComponentInterac
 import {
   AplikoBuildComponentRows,
   AplikoBuildEmbeds,
+  ComponentsToDJS,
   RepliableInteraction,
   ThrowError,
 } from "../util";
@@ -76,6 +77,7 @@ export class PanelManager {
       ephemeral: true,
       fetchReply: true,
     });
+    
     const context = {
       interaction,
       replyMessageId: replyMessage.id,
@@ -84,6 +86,25 @@ export class PanelManager {
 
     this._panelContextCache.set(replyMessage.id, context);
     this.openPage(context, pageClass);
+  }
+
+  public async openDynamicPanel(
+    interaction: RepliableInteraction,
+    page: PanelPage
+  ) {
+    const replyMessage = await interaction.deferReply({
+      ephemeral: true,
+      fetchReply: true,
+    });
+
+    const context = {
+      interaction,
+      replyMessageId: replyMessage.id,
+      currentPage: page,
+    };
+
+    this._panelContextCache.set(replyMessage.id, context);
+    this.openDynamicPage(context, page);
   }
 
   public async openDynamicPage(context: PanelContext, page: PanelPage) {
@@ -101,9 +122,11 @@ export class PanelManager {
   }
 
   public async refreshPage(context: PanelContext) {
+    const pageContent = await context.currentPage.constructPage(context);
+
     await context.interaction.editReply({
-      embeds: AplikoBuildEmbeds(...context.currentPage.embeds),
-      components: AplikoBuildComponentRows(...context.currentPage.components),
+      embeds: AplikoBuildEmbeds(...pageContent.embeds),
+      components: ComponentsToDJS(...pageContent.components),
     });
   }
 
