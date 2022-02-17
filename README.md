@@ -13,7 +13,7 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 ## Todo: 
 - Finish rewriting interactions so you can send responses using class members instead of global util functions
 - Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
-- Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lma
+- Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao
 
 ## Getting Started
 
