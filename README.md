@@ -13,7 +13,7 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 ## Todo: 
 - Finish rewriting interactions so you can send responses using class members instead of global util functions
 - Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
-- Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao
+- Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lma
 
 ## Getting Started
 
@@ -40,7 +40,7 @@ bot.client.on('ready', async () => {
 bot.login();
 ```
 
-Simple enough, right? Well you may find yourself in a situation where you'd like to add some properties in the AplikoBot class since it get's passed as a parameter to all other Apliko classes, for example a connection to a database, a websocket connection, or maybe a payment gateway. While there's many ways to go about adding these properties I recommend using basic class inheritance to mix your properties into existing Apliko classes. Here's an example of a slash command using my own AplikoBot class.
+Simple enough, right? Well you may find yourself in a situation where you'd like to add some properties in the AplikoBot class since it gets passed as a parameter to all other Apliko classes like: a connection to a database, a websocket connection, or maybe a payment gateway. While there's many ways to go about adding these properties I recommend using basic class inheritance to mix your properties into existing Apliko classes. Here's an example of a slash command using my own AplikoBot class.
 
 ```typescript
 export class InheritBot extends AplikoBot {
