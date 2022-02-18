@@ -30,6 +30,8 @@ export class CollectorManager {
     new Map();
   private _awaitingForm: Map<FormCollectionKey, Deferred<Map<string, string>>> =
     new Map();
+  private _awaitingModal: Map<FormCollectionKey, Deferred<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }>> =
+    new Map();
 
   constructor(bot: AplikoBot) {
     bot.client.on("messageCreate", this.onMessageCreate.bind(this));
@@ -39,8 +41,28 @@ export class CollectorManager {
       (interaction: ApiBaseInteraction<InteractionType>) => {
         if (IsApiModalInteraction(interaction)) {
           const modalSubmitInteraction = new ModalSubmitInteraction(
+            bot,
             interaction as ApiModalSubmitInteraction
           );
+
+          this._awaitingModal.forEach(async (deferred, formCollectionKey) => {
+            if (modalSubmitInteraction.getUserId() != formCollectionKey.userId) return;
+            if (modalSubmitInteraction.getChannelId() != formCollectionKey.channelId) return;
+
+            await bot.rest.post(
+              Routes.interactionCallback(interaction.id, interaction.token),
+              {
+                body: {
+                  type: formCollectionKey.responseType
+                    ? formCollectionKey.responseType
+                    : 6,
+                },
+              }
+            );
+
+            deferred.resolve?.({ responses: modalSubmitInteraction.getValues(), interaction: modalSubmitInteraction });
+            this._awaitingModal.delete(formCollectionKey);
+          })
 
           this._awaitingForm.forEach(
             async (deferredValues, formCollectionKey) => {
@@ -196,12 +218,40 @@ export class CollectorManager {
   ): Promise<Map<string, string>> {
     let deferredValues = defer<Map<string, string>>();
 
+    this._awaitingModal
+      .get(formCollectionKey)
+      ?.reject?.(
+        "You started another interaction before finishing this one so it's been terminated."
+      );
+
     this._awaitingForm
       .get(formCollectionKey)
       ?.reject?.(
         "You started another interaction before finishing this one so it's been terminated."
       );
     this._awaitingForm.set(formCollectionKey, deferredValues);
+
+    return deferredValues.promise!;
+  }
+
+  public async collectModal(
+    formCollectionKey: FormCollectionKey
+  ): Promise<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }> {
+    let deferredValues = defer<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }>();
+
+    this._awaitingModal
+      .get(formCollectionKey)
+      ?.reject?.(
+        "You started another interaction before finishing this one so it's been terminated."
+      );
+
+    this._awaitingForm
+      .get(formCollectionKey)
+      ?.reject?.(
+        "You started another interaction before finishing this one so it's been terminated."
+      );
+
+    this._awaitingModal.set(formCollectionKey, deferredValues);
 
     return deferredValues.promise!;
   }

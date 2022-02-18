@@ -50,6 +50,10 @@ export class AplikoBot extends EventEmitter {
     console.log(`Logged in as ${this.client.user!.username}`);
   }
 
+  public get options() {
+    return this._options;
+  }
+
   public get client(): Client {
     return this._client;
   }

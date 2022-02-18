@@ -20,4 +20,10 @@ export interface ApiBaseInteraction<T extends InteractionType> {
   };
 
   channel_id: string;
+
+  message?: {
+    id: string;
+  }
+
+
 }

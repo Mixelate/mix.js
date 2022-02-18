@@ -63,16 +63,21 @@ export class Controller implements CallbackHandler {
     this.selectCallbacks = new Map();
     this.modalCallbacks = new Map();
 
-    bot.client.ws.on(
-      "INTERACTION_CREATE",
-      async (interaction: ApiBaseInteraction<InteractionType>) => {
-        if (IsApiModalInteraction(interaction)) {
-          const modalSubmitInteraction = new ModalSubmitInteraction(
-            interaction as ApiModalSubmitInteraction
-          );
+    bot.client.ws.on("INTERACTION_CREATE", (interaction: ApiBaseInteraction<InteractionType>) => {
+      if (IsApiModalInteraction(interaction)) {
+        const modalSubmitInteraction = new ModalSubmitInteraction(
+          bot,
+          interaction as ApiModalSubmitInteraction
+        );
+
+        if (interaction.channel_id != this.channelId)
+          return;
+
+        return new Promise<void>(async (resolve, reject) => {
           const componentInteractionData = await FetchComponentInteractionData(
             modalSubmitInteraction.getCustomId()
           );
+
           await this.modalCallbacks
             .get(componentInteractionData.componentId)
             ?.apply(this, [
@@ -81,8 +86,11 @@ export class Controller implements CallbackHandler {
                 data: componentInteractionData,
               },
             ]);
-        }
+
+          resolve();
+        })
       }
+    }
     );
   }
 
@@ -134,7 +142,7 @@ export class Controller implements CallbackHandler {
           ]);
       }
     } catch (error: any) {
-      await interaction.deferReply({ ephemeral: true }).catch((_) => {});
+      await interaction.deferReply({ ephemeral: true }).catch((_) => { });
       await interaction.editReply({
         embeds: AplikoBuildEmbeds({
           style: AplikoEmbedStyle.ERROR,
