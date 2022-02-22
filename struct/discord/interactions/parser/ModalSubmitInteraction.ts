@@ -2,8 +2,9 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 import { Client, InteractionWebhook, MessageEmbed, MessageFlags } from "discord.js";
 import { AplikoBot } from "../../../../Bot";
-import { ComponentsToDJS } from "../../../../util";
+import { AplikoBuildEmbeds, ComponentsToDJS } from "../../../../util";
 import { ActionRow, Component } from "../../components";
+import { Message } from "../../Message";
 import { ApiModalSubmitInteraction } from "../data";
 import { InteractionResponseType } from "../enum";
 
@@ -13,6 +14,7 @@ export class ModalSubmitInteraction {
   private readonly id: string;
   private readonly token: string
   private readonly customId: string;
+  private readonly guildId?: string;
   private readonly channelId: string;
   private readonly userId: string;
   private readonly values: Map<string, string>;
@@ -23,6 +25,7 @@ export class ModalSubmitInteraction {
     this.id = data.id;
     this.token = data.token;
     this.customId = data.data.custom_id;
+    this.guildId = data.guild?.id
     this.channelId = data.channel_id;
     this.userId = data.member!.user.id;
     this.values = new Map();
@@ -57,10 +60,11 @@ export class ModalSubmitInteraction {
     });
   }
 
-  public async editReply(embeds: MessageEmbed[], components?: ActionRow[]) {
+  public async editReply(message: Message) {
     await this.webhook.editMessage('@original', {
-      embeds,
-      components: components ? ComponentsToDJS(...components) : undefined
+      content: message.content ? message.content : undefined,
+      embeds: message.embeds ? AplikoBuildEmbeds(...message.embeds) : [],
+      components: message.components ? ComponentsToDJS(...message.components) : []
     })
   }
 
@@ -78,6 +82,10 @@ export class ModalSubmitInteraction {
 
   public getToken() {
     return this.token;
+  }
+
+  public getGuildId() {
+    return this.guildId;
   }
 
   public getCustomId() {

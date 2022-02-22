@@ -27,8 +27,8 @@ export class InteractButton extends Button<ApiInteractButton> {
     super();
   }
 
-  public static new(): InteractButton {
-    return new InteractButton();
+  public static new(id?: string): InteractButton {
+    return new InteractButton().id(id || '');
   }
 
   public label(value: string): InteractButton {
