@@ -99,16 +99,16 @@ export class QuestionnaireManager {
             messageResolvable: message.id,
             componentId: "questionnaire_revise_confirm",
           })
-          .then((value) => [value]),
+          .then((value) => value),
         this.bot.collector
           .collectButton({
             guildMemberResolvable: interaction.user.id,
             messageResolvable: message.id,
             componentId: "questionnaire_revise_cancel",
           })
-          .then((value) => [value]),
+          .then((value) => value),
       ])
-    ).join(", ");
+    );
 
     switch (value) {
       case "questionnaire_revise_confirm": {

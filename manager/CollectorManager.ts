@@ -24,7 +24,7 @@ import { ThrowError } from "../util/Errors";
 export class CollectorManager {
   private _awaitingMessage: Map<MessageCollectionKey, Deferred<Message>> =
     new Map();
-  private _awaitingSelection: Map<ComponentCollectionKey, Deferred<string[]>> =
+  private _awaitingSelection: Map<ComponentCollectionKey, Deferred<string>> =
     new Map();
   private _awaitingButton: Map<ComponentCollectionKey, Deferred<string>> =
     new Map();
@@ -125,7 +125,8 @@ export class CollectorManager {
             return;
 
           interaction.deferUpdate().catch(() => null);
-          deferredSelection.resolve!(interaction.values);
+          deferredSelection.resolve!(interaction.values[0]);
+          console.log('res')
           this._awaitingSelection.delete(componentCollectionKey);
         }
       );
@@ -185,8 +186,8 @@ export class CollectorManager {
 
   public async collectSelection(
     selectionCollectionKey: ComponentCollectionKey
-  ): Promise<string[]> {
-    let deferredSelection = defer<string[]>();
+  ): Promise<string> {
+    let deferredSelection = defer<string>();
 
     this._awaitingSelection
       .get(selectionCollectionKey)
