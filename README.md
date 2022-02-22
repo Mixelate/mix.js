@@ -43,7 +43,7 @@ bot.client.on('ready', async () => {
 bot.login();
 ```
 
-Simple enough, right? Well you may find yourself in a situation where you'd like to add some properties in the AplikoBot class since it get's passed as a parameter to all other Apliko classes, for example a connection to a database, a websocket connection, or maybe a payment gateway. While there's many ways to go about adding these properties I recommend using basic class inheritance to mix your properties into existing Apliko classes. Here's an example of a slash command using my own AplikoBot class.
+Simple enough, right? Well you may find yourself in a situation where you'd like to add some properties in the AplikoBot class since it gets passed as a parameter to all other Apliko classes like: a connection to a database, a websocket connection, or maybe a payment gateway. While there's many ways to go about adding these properties I recommend using basic class inheritance to mix your properties into existing Apliko classes. Here's an example of a slash command using my own AplikoBot class.
 
 ```typescript
 export class InheritBot extends AplikoBot {
