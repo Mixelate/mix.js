@@ -18,8 +18,8 @@ export class DropdownOption implements JsonSerializable {
     };
   }
 
-  public static new(): DropdownOption {
-    return new DropdownOption();
+  public static new(value?: string): DropdownOption {
+    return new DropdownOption().value(value || '');
   }
 
   public label(value: string): DropdownOption {
@@ -100,8 +100,8 @@ export abstract class Dropdown<
 }
 
 export class SingleSelectDropdown extends Dropdown<ApiDropdown> {
-  public static new(): SingleSelectDropdown {
-    return new SingleSelectDropdown();
+  public static new(id?: string): SingleSelectDropdown {
+    return new SingleSelectDropdown().customId(id || '');
   }
 }
 

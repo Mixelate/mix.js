@@ -13,8 +13,8 @@ export class ActionRow<
 
   public static new<
     A extends Component<ApiComponent<ComponentType>>
-  >(): ActionRow<A> {
-    return new ActionRow<A>();
+  >(...components: A[]): ActionRow<A> {
+    return new ActionRow<A>().components(...components);
   }
 
   public components(...components: T[]): ActionRow<T> {

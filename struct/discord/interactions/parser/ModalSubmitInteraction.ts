@@ -34,7 +34,7 @@ export class ModalSubmitInteraction {
     });
   }
 
-  public async deferReply(ephemeral: boolean) {
+  public async deferReply(ephemeral?: boolean) {
     await this.bot.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
         type: InteractionResponseType.DEFERRED_MESSAGE,
@@ -57,10 +57,10 @@ export class ModalSubmitInteraction {
     });
   }
 
-  public async editReply(embeds: MessageEmbed[], components: ActionRow[]) {
+  public async editReply(embeds: MessageEmbed[], components?: ActionRow[]) {
     await this.webhook.editMessage('@original', {
       embeds,
-      components: ComponentsToDJS(...components)
+      components: components ? ComponentsToDJS(...components) : undefined
     })
   }
 
