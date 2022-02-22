@@ -3,6 +3,9 @@ import {
   BitFieldResolvable,
   Client,
   ColorResolvable,
+  GuildMember,
+  GuildMemberResolvable,
+  GuildResolvable,
   IntentsString,
 } from "discord.js";
 import EventEmitter from "events";
@@ -48,6 +51,27 @@ export class AplikoBot extends EventEmitter {
 
   private async onReady() {
     console.log(`Logged in as ${this.client.user!.username}`);
+  }
+
+  public async fetchGuildMember(guildMemberResolvable: GuildMemberResolvable, guildResolvable?: GuildResolvable): Promise<GuildMember> {
+    const rawGuilds = guildResolvable
+      ? [await this.client.guilds.fetch({ guild: guildResolvable })]
+      : (await this.client.guilds.fetch())
+        .map(guild => guild);
+
+    for (const rawGuild of rawGuilds) {
+      const resolvedGuild = this.client.guilds.resolve(rawGuild.id)
+
+      if (!resolvedGuild)
+        continue;
+
+      const resolvedMember = resolvedGuild.members.resolve(guildMemberResolvable)
+
+      if (resolvedMember)
+        return resolvedMember
+    }
+
+    throw `Couldn't resolve guild member.`
   }
 
   public get options() {
