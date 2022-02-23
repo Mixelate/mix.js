@@ -75,19 +75,23 @@ export class Controller implements CallbackHandler {
           if (interaction.channel_id != this.channelId) return;
 
           return new Promise<void>(async (resolve, reject) => {
+           try {
             const componentInteractionData =
-              await FetchComponentInteractionData(
-                modalSubmitInteraction.getCustomId()
-              );
+            await FetchComponentInteractionData(
+              modalSubmitInteraction.getCustomId()
+            );
 
-            await this.modalCallbacks
-              .get(componentInteractionData.componentId)
-              ?.apply(this, [
-                <ModalInteractionContext>{
-                  interaction: modalSubmitInteraction,
-                  data: componentInteractionData,
-                },
-              ]);
+          await this.modalCallbacks
+            .get(componentInteractionData.componentId)
+            ?.apply(this, [
+              <ModalInteractionContext>{
+                interaction: modalSubmitInteraction,
+                data: componentInteractionData,
+              },
+            ]);
+           } catch(err) {
+             await modalSubmitInteraction.handleError(err)
+           }
 
             resolve();
           });

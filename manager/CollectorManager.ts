@@ -139,7 +139,6 @@ export class CollectorManager {
 
           interaction.deferUpdate().catch(() => null);
           deferredSelection.resolve!(interaction.values[0]);
-          console.log("res");
           this._awaitingSelection.delete(componentCollectionKey);
         }
       );
