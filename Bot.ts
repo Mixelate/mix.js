@@ -53,25 +53,27 @@ export class AplikoBot extends EventEmitter {
     console.log(`Logged in as ${this.client.user!.username}`);
   }
 
-  public async fetchGuildMember(guildMemberResolvable: GuildMemberResolvable, guildResolvable?: GuildResolvable): Promise<GuildMember> {
+  public async fetchGuildMember(
+    guildMemberResolvable: GuildMemberResolvable,
+    guildResolvable?: GuildResolvable
+  ): Promise<GuildMember> {
     const rawGuilds = guildResolvable
       ? [await this.client.guilds.fetch({ guild: guildResolvable })]
-      : (await this.client.guilds.fetch())
-        .map(guild => guild);
+      : (await this.client.guilds.fetch()).map((guild) => guild);
 
     for (const rawGuild of rawGuilds) {
-      const resolvedGuild = this.client.guilds.resolve(rawGuild.id)
+      const resolvedGuild = this.client.guilds.resolve(rawGuild.id);
 
-      if (!resolvedGuild)
-        continue;
+      if (!resolvedGuild) continue;
 
-      const resolvedMember = resolvedGuild.members.resolve(guildMemberResolvable)
+      const resolvedMember = resolvedGuild.members.resolve(
+        guildMemberResolvable
+      );
 
-      if (resolvedMember)
-        return resolvedMember
+      if (resolvedMember) return resolvedMember;
     }
 
-    throw `Couldn't resolve guild member.`
+    throw `Couldn't resolve guild member.`;
   }
 
   public get options() {

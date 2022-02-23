@@ -77,7 +77,7 @@ export class PanelManager {
       ephemeral: true,
       fetchReply: true,
     });
-    
+
     const context = {
       interaction,
       replyMessageId: replyMessage.id,

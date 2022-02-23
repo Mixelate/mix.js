@@ -3,9 +3,11 @@
 Apliko is a Discord.js framework aimed at `making the work of professionals easier and faster`. It uses a collection of applications to accomplish common tasks in Discord bots. These include slash commands, channel controllers, questionnaires, and panels.
 
 ## Documentation
+
 [GitBook Docs](https://anthony-a.gitbook.io/apliko/)
 
-## Todo: 
+## Todo:
+
 - [ ] Finish rewriting interactions so you can send responses using class members instead of global util functions
 - [x] Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
 - [ ] Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao

@@ -19,7 +19,7 @@ export class DropdownOption implements JsonSerializable {
   }
 
   public static new(value?: string): DropdownOption {
-    return new DropdownOption().value(value || '');
+    return new DropdownOption().value(value || "");
   }
 
   public label(value: string): DropdownOption {
@@ -57,7 +57,7 @@ export class DropdownOption implements JsonSerializable {
 
 export abstract class Dropdown<
   T extends ApiDropdown = ApiDropdown
-  > extends Component<T> {
+> extends Component<T> {
   protected constructor() {
     super(ComponentType.DROPDOWN);
   }
@@ -68,12 +68,11 @@ export abstract class Dropdown<
   }
 
   public options(...options: (DropdownOption | undefined)[]): Dropdown {
-    if (!this.data.options)
-      this.data.options = [];
-      
+    if (!this.data.options) this.data.options = [];
+
     this.data.options.push(
       ...options
-        .filter(option => option != undefined)
+        .filter((option) => option != undefined)
         .map((option) => option!.toJSON())
     );
     return this;
@@ -101,7 +100,7 @@ export abstract class Dropdown<
 
 export class SingleSelectDropdown extends Dropdown<ApiDropdown> {
   public static new(id?: string): SingleSelectDropdown {
-    return new SingleSelectDropdown().customId(id || '');
+    return new SingleSelectDropdown().customId(id || "");
   }
 }
 

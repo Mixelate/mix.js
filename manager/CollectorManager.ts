@@ -30,8 +30,13 @@ export class CollectorManager {
     new Map();
   private _awaitingForm: Map<FormCollectionKey, Deferred<Map<string, string>>> =
     new Map();
-  private _awaitingModal: Map<FormCollectionKey, Deferred<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }>> =
-    new Map();
+  private _awaitingModal: Map<
+    FormCollectionKey,
+    Deferred<{
+      responses: Map<string, string>;
+      interaction: ModalSubmitInteraction;
+    }>
+  > = new Map();
 
   constructor(bot: AplikoBot) {
     bot.client.on("messageCreate", this.onMessageCreate.bind(this));
@@ -46,8 +51,13 @@ export class CollectorManager {
           );
 
           this._awaitingModal.forEach(async (deferred, formCollectionKey) => {
-            if (modalSubmitInteraction.getUserId() != formCollectionKey.userId) return;
-            if (modalSubmitInteraction.getChannelId() != formCollectionKey.channelId) return;
+            if (modalSubmitInteraction.getUserId() != formCollectionKey.userId)
+              return;
+            if (
+              modalSubmitInteraction.getChannelId() !=
+              formCollectionKey.channelId
+            )
+              return;
 
             await bot.rest.post(
               Routes.interactionCallback(interaction.id, interaction.token),
@@ -60,9 +70,12 @@ export class CollectorManager {
               }
             );
 
-            deferred.resolve?.({ responses: modalSubmitInteraction.getValues(), interaction: modalSubmitInteraction });
+            deferred.resolve?.({
+              responses: modalSubmitInteraction.getValues(),
+              interaction: modalSubmitInteraction,
+            });
             this._awaitingModal.delete(formCollectionKey);
-          })
+          });
 
           this._awaitingForm.forEach(
             async (deferredValues, formCollectionKey) => {
@@ -126,7 +139,7 @@ export class CollectorManager {
 
           interaction.deferUpdate().catch(() => null);
           deferredSelection.resolve!(interaction.values[0]);
-          console.log('res')
+          console.log("res");
           this._awaitingSelection.delete(componentCollectionKey);
         }
       );
@@ -235,10 +248,14 @@ export class CollectorManager {
     return deferredValues.promise!;
   }
 
-  public async collectModal(
-    formCollectionKey: FormCollectionKey
-  ): Promise<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }> {
-    let deferredValues = defer<{ responses: Map<string, string>, interaction: ModalSubmitInteraction }>();
+  public async collectModal(formCollectionKey: FormCollectionKey): Promise<{
+    responses: Map<string, string>;
+    interaction: ModalSubmitInteraction;
+  }> {
+    let deferredValues = defer<{
+      responses: Map<string, string>;
+      interaction: ModalSubmitInteraction;
+    }>();
 
     this._awaitingModal
       .get(formCollectionKey)

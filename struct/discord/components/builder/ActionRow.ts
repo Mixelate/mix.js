@@ -11,9 +11,9 @@ export class ActionRow<
     super(ComponentType.ACTION_ROW);
   }
 
-  public static new<
-    A extends Component<ApiComponent<ComponentType>>
-  >(...components: A[]): ActionRow<A> {
+  public static new<A extends Component<ApiComponent<ComponentType>>>(
+    ...components: A[]
+  ): ActionRow<A> {
     return new ActionRow<A>().components(...components);
   }
 

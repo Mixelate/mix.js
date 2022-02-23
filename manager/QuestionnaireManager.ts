@@ -86,29 +86,27 @@ export class QuestionnaireManager {
       ),
     });
 
-    const value = (
-      await Promise.race([
-        this.bot.collector.collectSelection({
+    const value = await Promise.race([
+      this.bot.collector.collectSelection({
+        guildMemberResolvable: interaction.user.id,
+        messageResolvable: message.id,
+        componentId: "questionnaire_revise_edit",
+      }),
+      this.bot.collector
+        .collectButton({
           guildMemberResolvable: interaction.user.id,
           messageResolvable: message.id,
-          componentId: "questionnaire_revise_edit",
-        }),
-        this.bot.collector
-          .collectButton({
-            guildMemberResolvable: interaction.user.id,
-            messageResolvable: message.id,
-            componentId: "questionnaire_revise_confirm",
-          })
-          .then((value) => value),
-        this.bot.collector
-          .collectButton({
-            guildMemberResolvable: interaction.user.id,
-            messageResolvable: message.id,
-            componentId: "questionnaire_revise_cancel",
-          })
-          .then((value) => value),
-      ])
-    );
+          componentId: "questionnaire_revise_confirm",
+        })
+        .then((value) => value),
+      this.bot.collector
+        .collectButton({
+          guildMemberResolvable: interaction.user.id,
+          messageResolvable: message.id,
+          componentId: "questionnaire_revise_cancel",
+        })
+        .then((value) => value),
+    ]);
 
     switch (value) {
       case "questionnaire_revise_confirm": {
@@ -211,15 +209,16 @@ export class QuestionnaireManager {
       if (!question.key)
         ThrowError(
           "Question incorrectly configured: missing key property. Report to an administrator."
-        );
+          );
 
       data[question.key] = context.answers[index];
     });
 
     return data as T;
   }
-
+  
   get bot() {
     return this._bot;
   }
+
 }

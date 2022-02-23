@@ -63,34 +63,36 @@ export class Controller implements CallbackHandler {
     this.selectCallbacks = new Map();
     this.modalCallbacks = new Map();
 
-    bot.client.ws.on("INTERACTION_CREATE", (interaction: ApiBaseInteraction<InteractionType>) => {
-      if (IsApiModalInteraction(interaction)) {
-        const modalSubmitInteraction = new ModalSubmitInteraction(
-          bot,
-          interaction as ApiModalSubmitInteraction
-        );
-
-        if (interaction.channel_id != this.channelId)
-          return;
-
-        return new Promise<void>(async (resolve, reject) => {
-          const componentInteractionData = await FetchComponentInteractionData(
-            modalSubmitInteraction.getCustomId()
+    bot.client.ws.on(
+      "INTERACTION_CREATE",
+      (interaction: ApiBaseInteraction<InteractionType>) => {
+        if (IsApiModalInteraction(interaction)) {
+          const modalSubmitInteraction = new ModalSubmitInteraction(
+            bot,
+            interaction as ApiModalSubmitInteraction
           );
 
-          await this.modalCallbacks
-            .get(componentInteractionData.componentId)
-            ?.apply(this, [
-              <ModalInteractionContext>{
-                interaction: modalSubmitInteraction,
-                data: componentInteractionData,
-              },
-            ]);
+          if (interaction.channel_id != this.channelId) return;
 
-          resolve();
-        })
+          return new Promise<void>(async (resolve, reject) => {
+            const componentInteractionData =
+              await FetchComponentInteractionData(
+                modalSubmitInteraction.getCustomId()
+              );
+
+            await this.modalCallbacks
+              .get(componentInteractionData.componentId)
+              ?.apply(this, [
+                <ModalInteractionContext>{
+                  interaction: modalSubmitInteraction,
+                  data: componentInteractionData,
+                },
+              ]);
+
+            resolve();
+          });
+        }
       }
-    }
     );
   }
 
@@ -142,7 +144,7 @@ export class Controller implements CallbackHandler {
           ]);
       }
     } catch (error: any) {
-      await interaction.deferReply({ ephemeral: true }).catch((_) => { });
+      await interaction.deferReply({ ephemeral: true }).catch((_) => {});
       await interaction.editReply({
         embeds: AplikoBuildEmbeds({
           style: AplikoEmbedStyle.ERROR,

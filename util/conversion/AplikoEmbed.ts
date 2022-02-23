@@ -149,7 +149,10 @@ export function AplikoBuildEmbeds(
         if (aplikoEmbedField.title.length > AplikoEmbedMaxFieldTitleSize)
           ThrowError("Embed field title is too long");
 
-        if (aplikoEmbedField.content && aplikoEmbedField.content.length > AplikoEmbedMaxFieldContentSize)
+        if (
+          aplikoEmbedField.content &&
+          aplikoEmbedField.content.length > AplikoEmbedMaxFieldContentSize
+        )
           ThrowError("Embged field content is too long");
 
         messageEmbed.addField(

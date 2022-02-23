@@ -16,9 +16,18 @@ import {
 import { SilentCatch, ThrowError } from "../util/Errors";
 import {
   ButtonInteractionContext,
+  ModalInteractionContext,
   SelectMenuInteractionContext,
 } from "../struct/apliko/Contexts";
 import { FetchComponentInteractionData } from "../struct/apliko/ComponentInteractionData";
+import { ApiBaseInteraction } from "../struct/discord/interactions/data/ApiBaseInteraction";
+import { InteractionType } from "../struct/discord/interactions/enum/InteractionType";
+import {
+  ApiModalSubmitInteraction,
+  IsApiModalInteraction,
+} from "../struct/discord/interactions/data/ApiModalInteraction";
+import { ModalSubmitInteraction } from "../struct/discord/interactions/parser/ModalSubmitInteraction";
+import { AplikoError } from "../struct";
 
 export class InteractionHandler implements CallbackHandler {
   protected _bot: AplikoBot;
@@ -33,15 +42,54 @@ export class InteractionHandler implements CallbackHandler {
     string,
     (context: SelectMenuInteractionContext) => Promise<any>
   >;
+  public modalCallbacks: Map<
+    string,
+    (context: ModalInteractionContext) => Promise<any>
+  >;
 
   public constructor(bot: AplikoBot) {
     this._bot = bot;
     this._stopped = false;
     this.buttonCallbacks = new Map();
     this.selectCallbacks = new Map();
+    this.modalCallbacks = new Map();
     this._bot.client.on(
       "interactionCreate",
       this.onInteractionCreate.bind(this)
+    );
+
+    bot.client.ws.on(
+      "INTERACTION_CREATE",
+      (interaction: ApiBaseInteraction<InteractionType>) => {
+        if (IsApiModalInteraction(interaction)) {
+          const modalSubmitInteraction = new ModalSubmitInteraction(
+            bot,
+            interaction as ApiModalSubmitInteraction
+          );
+
+          return new Promise<void>(async (resolve, reject) => {
+            try {
+              const componentInteractionData =
+                await FetchComponentInteractionData(
+                  modalSubmitInteraction.getCustomId()
+                );
+
+              await this.modalCallbacks
+                .get(componentInteractionData.componentId)
+                ?.apply(this, [
+                  <ModalInteractionContext>{
+                    interaction: modalSubmitInteraction,
+                    data: componentInteractionData,
+                  },
+                ]);
+            } catch (err) {
+              await modalSubmitInteraction.handleError(err)
+            }
+
+            resolve();
+          });
+        }
+      }
     );
   }
 

@@ -1,6 +1,6 @@
 import { InteractionType } from "../enum";
 
-export interface ApiBaseInteraction<T extends InteractionType> {
+export interface ApiBaseInteraction<T extends InteractionType = InteractionType> {
   readonly type: T;
 
   id: string;
@@ -23,7 +23,5 @@ export interface ApiBaseInteraction<T extends InteractionType> {
 
   message?: {
     id: string;
-  }
-
-
+  };
 }

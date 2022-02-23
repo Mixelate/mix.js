@@ -2,9 +2,7 @@ import { AplikoEmbed } from "../../util";
 import { ActionRow } from "../discord";
 
 export interface PageContent {
+  embeds: AplikoEmbed[];
 
-    embeds: AplikoEmbed[];
-
-    components: ActionRow[];
-    
+  components: ActionRow[];
 }

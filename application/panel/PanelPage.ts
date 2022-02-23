@@ -1,4 +1,7 @@
-import { AplikoEmbed, AplikoEmbedStyle } from "../../util/conversion/AplikoEmbed";
+import {
+  AplikoEmbed,
+  AplikoEmbedStyle,
+} from "../../util/conversion/AplikoEmbed";
 import { AplikoComponent } from "../../util/conversion/AplikoComponent";
 import {
   ButtonInteractionContext,
@@ -37,13 +40,11 @@ export abstract class PanelPage implements CallbackHandler {
       embeds: [
         <AplikoEmbed>{
           style: AplikoEmbedStyle.ERROR,
-          description: 'Page not configured.'
-        }
+          description: "Page not configured.",
+        },
       ],
-      components: [
-
-      ]
-    }
+      components: [],
+    };
   }
 
   public async onButton(

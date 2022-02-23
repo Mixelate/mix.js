@@ -28,7 +28,7 @@ export class InteractButton extends Button<ApiInteractButton> {
   }
 
   public static new(id?: string): InteractButton {
-    return new InteractButton().id(id || '');
+    return new InteractButton().id(id || "");
   }
 
   public label(value: string): InteractButton {
