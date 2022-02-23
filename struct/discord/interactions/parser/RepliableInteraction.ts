@@ -160,24 +160,12 @@ export class RepliableInteraction extends BaseInteraction {
     }
 
     /**
-     * If deferred, updates the original message. If not, ACK's the interaction and updates the original message
+     * If deferred or replied, updates the original message. If not, ACK's the interaction and updates the original message
      * 
      * @param message The new content of the message
      */
     public async edit(message: AplikoMessage) {
-        if (this.deferredReply)
-            throw new AplikoError(
-                `deferReply() called before edit.`,
-                [`Try calling defer() instead of deferReply()`]
-            )
-
-        if (this.replied)
-            throw new AplikoError(
-                `reply() called before edit()`,
-                [`Try calling editReply() instead of edit()`]
-            )
-
-        if (this.deferredEdit) {
+        if (this.deferredEdit || this.deferredReply || this.replied) {
             const original = $falsyThrow!(
                 `Failed to fetch original message`,
                 await this.getWebhook().fetchMessage("@original")
@@ -205,6 +193,18 @@ export class RepliableInteraction extends BaseInteraction {
                 auth: false,
             });
         }
+    }
+
+    /**
+     * Delets the original message
+     */
+    public async delete() {
+        const original = $falsyThrow!(
+            `Failed to fetch original message`,
+            await this.getWebhook().fetchMessage("@original")
+        ) as Message
+
+       await original.delete();
     }
 
     public async handleError(error) {
