@@ -207,7 +207,9 @@ export class RepliableInteraction extends BaseInteraction {
        await original.delete();
     }
 
-    public async handleError(error) {
+    public async handleError(error: any) {
+        console.log(error.toString());
+
         if (this.deferredReply || this.replied) {
             return this.editReply(
                 {
