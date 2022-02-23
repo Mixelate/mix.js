@@ -20,7 +20,7 @@ export class BaseInteraction {
         this.webhook = new InteractionWebhook(bot.client, data.application_id, data.token);
         this.id = data.id;
         this.token = data.token;
-        this.guildId = data.guild?.id;
+        this.guildId = data.guild_id
         this.channelId = data.channel_id;
         this.userId = data.member?.user.id;
 
