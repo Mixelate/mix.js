@@ -8,9 +8,9 @@ Apliko is a Discord.js framework aimed at `making the work of professionals easi
 
 ## Todo:
 
-- [ ] Finish rewriting interactions so you can send responses using class members instead of global util functions
-- [x] Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
-- [ ] Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao
+-   [ ] Finish rewriting interactions so you can send responses using class members instead of global util functions
+-   [x] Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
+-   [ ] Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao
 
 ## Use Apliko in your project
 
@@ -111,10 +111,10 @@ Creating a global interaction handler means you'll recieve `all` interactionCrea
 ```typescript
 @RegisterCallbacks
 export class MyInteractionHandler extends InteractionHandler {
-  @ButtonCallback("my_button_id")
-  public async handleMyButton(context: ButtonInteractionContext) {
-    //context.interaction...
-  }
+    @ButtonCallback('my_button_id')
+    public async handleMyButton(context: ButtonInteractionContext) {
+        //context.interaction...
+    }
 }
 ```
 
@@ -178,8 +178,8 @@ Recieving modals makes use of our collector class. Just like collecting message 
 ```typescript
 //public async openMyForm(context:...
 const formResponses = await this.bot.collector.collectForm({
-  userId: context.interaction.user.id,
-  channelId: context.interaction.channelId,
-  modalId: "my_form",
+    userId: context.interaction.user.id,
+    channelId: context.interaction.channelId,
+    modalId: 'my_form'
 });
 ```
