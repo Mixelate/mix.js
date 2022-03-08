@@ -1,5 +1,5 @@
-import { Client } from 'Client';
 import { ColorResolvable, Message, MessageEmbed, MessageEmbedThumbnail } from 'discord.js';
+import { Client } from '../..';
 import { ThrowError } from '../Errors';
 
 /**

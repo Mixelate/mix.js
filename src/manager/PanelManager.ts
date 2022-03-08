@@ -93,7 +93,10 @@ export class PanelManager {
         const replyMessage = await interaction.deferReply({
             ephemeral: true,
             fetchReply: true
-        });
+        }).catch(() => null);
+
+        if (!replyMessage)
+            return;
 
         const context = {
             interaction,
@@ -120,10 +123,10 @@ export class PanelManager {
     public async refreshPage(context: PanelContext) {
         const pageContent = await context.currentPage.constructPage(context);
 
-        await context.interaction.editReply({
+        const res = await context.interaction.editReply({
             embeds: AplikoBuildEmbeds(this.client, ...pageContent.embeds),
             components: ComponentsToDJS(...pageContent.components)
-        });
+        }).catch(() => null);
     }
 
     public registerPage(page: PanelPage) {

@@ -1,4 +1,4 @@
-import { Client } from 'Client';
+import { Client } from '..';
 import { Interaction, Message } from 'discord.js';
 import { Controller } from '../application/Controller';
 

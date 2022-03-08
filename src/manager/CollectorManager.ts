@@ -1,18 +1,19 @@
-import { GuildMember, Interaction, Message } from 'discord.js';
-import { ButtonCollectionResult } from 'struct/apliko/collector/result/ButtonCollectionResult';
-import { DropdownCollectionResult } from 'struct/apliko/collector/result/DropdownCollectionResult';
-import { MessageCollectionResult } from 'struct/apliko/collector/result/MessageCollectionResult';
-import { ModalCollectionResult } from 'struct/apliko/collector/result/ModalCollectionResult';
-
+import { GuildMember, Interaction, Message, MessageResolvable } from 'discord.js';
 import {
     BaseInteraction,
+    ButtonCollectionResult,
     Client,
     ComponentCollectionKey,
+    ComponentCollectionKeyV2,
+    ComponentCollectionResult,
     defer,
     Deferred,
+    DropdownCollectionResult,
     getUserIdFromMention,
     MessageCollectionKey,
+    MessageCollectionResult,
     ModalCollectionKey,
+    ModalCollectionResult,
     ModalSubmitInteraction,
     SafeDeleteMessage,
     ThrowError,
@@ -21,6 +22,7 @@ import {
 // TODO: Rewrite this son of a bitch
 export class CollectorManager {
 
+    private awaitingComponent: Map<string, Deferred<ComponentCollectionResult>> = new Map();
     private awaitingMessage: Map<MessageCollectionKey, Deferred<MessageCollectionResult>> = new Map();
     private awaitingDropdown: Map<ComponentCollectionKey, Deferred<DropdownCollectionResult>> = new Map();
     private awaitingButton: Map<ComponentCollectionKey, Deferred<ButtonCollectionResult>> = new Map();
@@ -36,15 +38,25 @@ export class CollectorManager {
         this.awaitingMessage.forEach((deferredMessage, messageCollectionKey) => {
             if (message.member != messageCollectionKey.userResolvable) return;
             if (message.channel != messageCollectionKey.channelResolvable) return;
-            deferredMessage.resolve?.({message});
+            deferredMessage.resolve?.({ message });
             SafeDeleteMessage(message);
             this.awaitingMessage.delete(messageCollectionKey);
         });
     }
 
     private async onInteractionCreate(interaction: Interaction) {
+        if (!interaction.isSelectMenu() && !interaction.isButton())
+            return;
+
+        this.awaitingComponent.get(interaction.message.id)?.resolve?.({
+            value: interaction.isSelectMenu()
+                ? interaction.values[0]
+                : interaction.customId,
+            interaction: interaction
+        })
+
         if (interaction.isSelectMenu()) {
-            this.awaitingDropdown.forEach((deferredSelection, componentCollectionKey) => {
+            this.awaitingDropdown.forEach(async (deferredSelection, componentCollectionKey) => {
                 if (componentCollectionKey.guildMemberResolvable && interaction.member != componentCollectionKey.guildMemberResolvable) return;
                 if (interaction.message != componentCollectionKey.messageResolvable) return;
                 if (interaction.customId != componentCollectionKey.componentId) return;
@@ -58,13 +70,13 @@ export class CollectorManager {
         }
 
         if (interaction.isButton()) {
-            this.awaitingButton.forEach((deferredSelection, componentCollectionKey) => {
+            this.awaitingButton.forEach(async (deferredSelection, componentCollectionKey) => {
                 if (componentCollectionKey.guildMemberResolvable && interaction.member != componentCollectionKey.guildMemberResolvable) return;
                 if (interaction.message != componentCollectionKey.messageResolvable) return;
                 if (interaction.customId != componentCollectionKey.componentId) return;
 
                 deferredSelection.resolve!({
-                    value: interaction.customId,
+                    id: interaction.customId,
                     interaction: interaction
                 });
                 this.awaitingButton.delete(componentCollectionKey);
@@ -85,6 +97,13 @@ export class CollectorManager {
                 this.awaitingModal.delete(formCollectionKey);
             });
         }
+    }
+
+    public async collectComponent(messageId: string): Promise<ComponentCollectionResult> {
+        let deferred = defer<ComponentCollectionResult>();
+        this.awaitingComponent.get(messageId)?.reject?.('Session expired.');
+        this.awaitingComponent.set(messageId, deferred);
+        return deferred.promise!;
     }
 
     public async collectMessage(messageCollectionKey: MessageCollectionKey): Promise<MessageCollectionResult> {

@@ -1,6 +1,5 @@
-import { ApiActionRow, ComponentType, ApiTextField, ApiTextFieldResponse } from '../../../..';
+import { ApiActionRow, ApiTextFieldResponse, InteractionType } from '../../../../..';
 import { Identifiable } from '../../Identifiable';
-import { InteractionType } from '../../../..';
 import { ApiBaseInteraction } from './ApiBaseInteraction';
 
 export interface ApiModalSubmitInteraction extends ApiBaseInteraction<InteractionType.MODAL_SUBMIT> {

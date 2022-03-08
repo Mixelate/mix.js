@@ -1,31 +1,31 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Guild, Interaction } from 'discord.js';
 import { ApplicationCommandPermissionTypes } from 'discord.js/typings/enums';
-import { Client, Command } from 'index';
+import { Client, Command } from '../..';
 
 export class CommandManager {
     private client: Client;
     private _commandMap: Map<string, Command>;
 
-    constructor(bot: Client) {
-        this.client = bot;
+    constructor(client: Client) {
+        this.client = client;
         this._commandMap = new Map();
 
-        this.client.on('ready', this.createCommandsGlobal.bind(this));
-        this.client.on('interactionCreate', this.onInteractionCreate.bind(this));
+        client.on('ready', this.createCommandsGlobal.bind(this));
+        client.on('interactionCreate', this.onInteractionCreate.bind(this));
     }
 
     private async onInteractionCreate(interaction: Interaction) {
         if (!interaction.isCommand()) return;
-
         await this._commandMap.get(interaction.commandName)?.callExecutors(interaction);
     }
 
     public async createCommandsGlobal() {
         const guilds = await this.client.fetchGuilds();
-
+        
         guilds.forEach(guild => {
-            this.createCommandsInGuild(guild).catch((_) => {});
+            console.log(this.client.options.id + ' ' + guild.name)
+            this.createCommandsInGuild(guild).catch((err) => {console.log(err)});
         });
     }
 

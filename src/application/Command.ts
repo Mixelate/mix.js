@@ -7,7 +7,7 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
 } from '@discordjs/builders';
-import { Client } from 'Client';
+import { Client } from '..';
 import { ChannelType } from 'discord-api-types/payloads/v9/channel';
 import {
     CategoryChannel,
