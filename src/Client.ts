@@ -1,17 +1,20 @@
 import { REST } from '@discordjs/rest';
 import {
     BitFieldResolvable,
+    Channel,
     Client as DiscordClient,
+    Collection,
     ColorResolvable,
     Guild,
     GuildMember,
     IntentsString,
     Interaction,
     Message,
+    TextChannel,
 } from 'discord.js';
 import EventEmitter from 'events';
 
-import { ControllerManager, PanelManager } from '.';
+import { ControllerManager, PanelManager } from '..';
 import { CollectorManager } from './manager/CollectorManager';
 import { CommandManager } from './manager/CommandManager';
 import { ApiBaseInteraction } from './struct/discord/interactions/api/ApiBaseInteraction';
@@ -35,16 +38,20 @@ export class Client extends EventEmitter {
         super();
         this.options = options;
         this.discordClient = new DiscordClient({ intents: options.intents });
-        this.discordClient.on('ready', this.onReady.bind(this));
         this.rest = new REST().setToken(this.options.token);
         this.commandManager = new CommandManager(this);
         this.panelManager = new PanelManager(this);
         this.controllerManager = new ControllerManager(this);
         this.collectorManager = new CollectorManager(this);
 
-        this.discordClient.ws.on('INTERACTION_CREATE', (interaction: ApiBaseInteraction<InteractionType>) => {
-            this.emit('interactionCreate', interaction);
-        });
+        this.allowedGuilds = options.allowGuilds;
+        this.ignoredGuilds = options.ignoreGuilds;
+
+        this.discordClient.on('ready', this.onReady.bind(this));
+        this.discordClient.on('interactionCreate', this.onInteraction.bind(this))
+        this.discordClient.on('messageCreate', this.onMessage.bind(this))
+        this.discordClient.ws.on('INTERACTION_CREATE', this.onWebsocketInteraction.bind(this));
+        console.log('Initialized a client')
     }
 
     public async login() {
@@ -53,14 +60,14 @@ export class Client extends EventEmitter {
     }
 
     private async onReady() {
-        console.log(`Logged in as ${this.discordClient.user!.username}`);
+        console.log(`A client logged in as ${this.discordClient.user!.username}`);
     }
 
     public async onWebsocketInteraction(interaction: ApiBaseInteraction) {
         if (!interaction.guild_id)
             return;
 
-        if (IsApiModalInteraction(interaction))
+        if (!IsApiModalInteraction(interaction))
             return;
 
         if (this.shouldHandleGuild(interaction.guild_id))
@@ -135,7 +142,79 @@ export class Client extends EventEmitter {
 
         if (cached) return cached;
 
-        return await this.fetchMember(guildId, memberId);
+        return await this.fetchMember(guildId, memberId).catch(_ => null);
+    }
+
+    public getCachedChannel(guildId: string, channelId: string): Channel | null {
+        return this.discordClient.guilds.resolve(guildId)?.channels.resolve(channelId) || null;
+    }
+
+    public async fetchChannel(guildId: string, channelId: string): Promise<Channel | null> {
+        return await this.discordClient.guilds
+            .fetch(guildId)
+            .then((guild) => this.discordClient.guilds.resolve(guild.id)!)
+            .then(async (guild) => {
+                return { guild, channel: await guild.channels.fetch(channelId) };
+            })
+            .then(({ guild, channel }) => guild.channels.resolve(channelId));
+    }
+
+    public async findChannel(guildId: string, channelId: string): Promise<Channel | null> {
+        const cached = this.getCachedChannel(guildId, channelId);
+
+        if (cached) return cached;
+
+        return await this.fetchChannel(guildId, channelId).catch(_ => null);
+    }
+
+    public getCachedMessage(guildId: string, messageId: string): Message | null {
+        const guild = this.discordClient.guilds.resolve(guildId)
+        if (!guild) return null;
+
+        const textChannels = guild.channels.cache.filter(channel =>
+            channel instanceof TextChannel) as Collection<string, TextChannel>
+
+        if (textChannels.size === 0) return null;
+
+        for (const [_, channel] of textChannels) {
+            const message = channel.messages.cache.get(messageId)
+            if (message) return message;
+        }
+
+        return null;
+    }
+
+    public async fetchMessage(guildId: string, messageId: string): Promise<Message | null> {
+        const guild = await this.discordClient.guilds.fetch(guildId)
+            .then(guild => this.discordClient.guilds.resolve(guildId))
+            .catch(_ => null)
+
+        if (!guild) return null;
+
+        const textChannels = await guild.channels.fetch()
+            .then(channels => channels.map(channel => guild.channels.resolve(channel)))
+            .then(channels => channels.filter(channel => channel instanceof TextChannel)) as
+                Collection<string, TextChannel>
+
+        if (!textChannels || textChannels.size === 0) return null;
+
+        for (const channel of textChannels.values()) {
+            const message = await channel.messages.fetch(messageId)
+                .then(message => channel.messages.resolve(messageId))
+                .catch(_ => null)
+    
+            if (message) return message;
+        }
+
+        return null;
+    }
+
+    public async findMessage(guildId: string, messageId: string): Promise<Message | null> {
+        const cached = this.getCachedMessage(guildId, messageId);
+
+        if (cached) return cached;
+
+        return await this.fetchMessage(guildId, messageId);
     }
 
     public ignoreGuilds(...guilds: string[]) {
