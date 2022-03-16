@@ -1,11 +1,11 @@
 import { TextChannel } from 'discord.js';
 
-export const GhostPing = (channel: TextChannel, id: string) => {
-    channel.send(`<@${id}>`).then((message) => setTimeout(() => message.delete(), 100));
+export const GhostPing = async (channel: TextChannel, id: string) => {
+    await channel.send(`<@${id}>`).then((message) => setTimeout(() => message.delete(), 100));
 };
 
-export const GhostPingRole = (channel: TextChannel, id: string) => {
-    channel.send(`<@&${id}>`).then((message) => setTimeout(() => message.delete(), 100));
+export const GhostPingRole = async (channel: TextChannel, id: string) => {
+    await channel.send(`<@&${id}>`).then((message) => setTimeout(() => message.delete(), 100));
 };
 
 /*

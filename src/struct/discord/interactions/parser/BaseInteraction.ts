@@ -12,6 +12,7 @@ export class BaseInteraction {
     private readonly guildId?: string;
     private readonly channelId: string;
     private readonly userId?: string;
+    private readonly userName?: string;
     private readonly messageId?: string;
 
     constructor(client: Client, data: ApiBaseInteraction) {
@@ -22,6 +23,7 @@ export class BaseInteraction {
         this.guildId = data.guild_id;
         this.channelId = data.channel_id;
         this.userId = data.member?.user.id;
+        this.userName = data.member?.user.username
         this.messageId = data.message?.id;
 
         // Fetch and cache entities

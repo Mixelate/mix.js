@@ -1,23 +1,21 @@
+import { ApiGuildMember } from 'struct/discord/entity/ApiGuildMember';
+import { ApiUser } from 'struct/discord/entity/ApiUser';
 import { InteractionType } from '../../../..';
 
 export interface ApiBaseInteraction<T extends InteractionType = InteractionType> {
+    readonly version: number;
+    readonly id: string;
+    readonly application_id: string;
+    readonly token: string;
     readonly type: T;
 
-    id: string;
-    token: string;
-
-    application_id: string;
-
-    guild_id?: string;
-
-    // TODO: Proper typings
-    member?: {
-        user: {
-            id: string;
-        };
-    };
-
-    channel_id: string;
+    readonly guild_id?: string;
+    readonly channel_id?: string;
+    readonly member?: ApiGuildMember;
+    readonly user?: ApiUser;
+    readonly locale?: string;
+    readonly guild_locale?: string;
+    
 
     message?: {
         id: string;

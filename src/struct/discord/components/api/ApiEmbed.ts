@@ -5,7 +5,7 @@ export interface ApiEmbed {
 
     url?: string;
 
-    timestamp?: string; // TODO: ISO8601 Timestamp??
+    timestamp?: string; 
 
     color?: `#${string}`;
 
@@ -24,16 +24,47 @@ export interface ApiEmbed {
     fields?: ApiEmbedField[];
 }
 
-export interface ApiEmbedFooter {}
+export interface ApiEmbedFooter {
+    readonly text: string;
+    readonly icon_url?: string;
+    readonly proxy_icon_url?: string;
+}
 
-export interface ApiEmbedImage {}
+export interface ApiEmbedImage {
+    readonly url: string;
+    readonly proxy_url?: string;
+    readonly height?: number;
+    readonly width?: number;
+}
 
-export interface ApiEmbedThumbnail {}
+export interface ApiEmbedThumbnail {
+    readonly url: string;
+    readonly proxy_url?: string;
+    readonly height?: number;
+    readonly width?: number;
+}
 
-export interface ApiEmbedVideo {}
+export interface ApiEmbedVideo {
+    readonly url?: string;
+    readonly proxy_url?: string;
+    readonly height?: number;
+    readonly width?: number;
+}
 
-export interface ApiEmbedProvider {}
+export interface ApiEmbedProvider {
+    readonly name?: string;
+    readonly url?: string;
+}
 
-export interface ApiEmbedAuthor {}
+export interface ApiEmbedAuthor {
+    readonly name: string;
+    readonly url?: string;
+    readonly icon_url?: string;
+    readonly proxy_icon_url?: string;
+}
 
-export interface ApiEmbedField {}
+export interface ApiEmbedField {
+    readonly name: string;
+    readonly value: string;
+    readonly inline?: boolean;
+}

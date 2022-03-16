@@ -161,7 +161,7 @@ export class Client extends EventEmitter {
 
     public async findChannel(guildId: string, channelId: string): Promise<Channel | null> {
         const cached = this.getCachedChannel(guildId, channelId);
-
+        
         if (cached) return cached;
 
         return await this.fetchChannel(guildId, channelId).catch(_ => null);
