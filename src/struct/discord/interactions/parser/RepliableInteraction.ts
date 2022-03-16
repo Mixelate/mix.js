@@ -187,5 +187,17 @@ export class RepliableInteraction extends BaseInteraction {
             true
         );
     }
+
+    public get wasReplyDeferred(): boolean {
+        return this.deferredReply;
+    }
+
+    public get wasEditDeferred(): boolean {
+        return this.deferredEdit;
+    }
+
+    public get didReply(): boolean {
+        return this.replied;
+    }
 }
 ``;

@@ -1,5 +1,5 @@
 import { Interaction } from 'discord.js';
-import { BaseInteraction, Client, PanelButtonInteractionContext, PanelContext, PanelModalInteractionContext, PanelPage, PanelSelectMenuInteractionContext } from '..';
+import { AplikoEmbedStyle, BaseInteraction, Client, PanelButtonInteractionContext, PanelContext, PanelModalInteractionContext, PanelPage, PanelSelectMenuInteractionContext } from '..';
 import { FetchComponentInteractionData } from '../struct/apliko/ComponentInteractionData';
 import { ApiBaseInteraction, ApiModalSubmitInteraction, IsApiModalInteraction } from '..';
 import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
@@ -29,27 +29,45 @@ export class PanelManager {
         const context = this.panelContextCache.get(interaction.message.id)!;
         const componentInteractionData = await FetchComponentInteractionData(interaction.customId);
 
-        if (interaction.isButton()) {
-            context.currentPage.onButton(
-                <PanelButtonInteractionContext>{
-                    interaction: interaction,
-                    data: componentInteractionData,
-                    panelContext: context
-                },
-                componentInteractionData
-            );
-        }
+        new Promise(async (resolve, reject) => {
+            if (interaction.isButton()) {
+                await context.currentPage.onButton(
+                    <PanelButtonInteractionContext>{
+                        interaction: interaction,
+                        data: componentInteractionData,
+                        panelContext: context
+                    },
+                    componentInteractionData
+                );
+            }
+    
+            if (interaction.isSelectMenu()) {
+                await context.currentPage.onSelect(
+                    <PanelSelectMenuInteractionContext>{
+                        interaction: interaction,
+                        data: componentInteractionData,
+                        panelContext: context
+                    },
+                    componentInteractionData
+                );
+            }
+        }).catch(err => {
+            if (interaction.replied || interaction.deferred) {
+                return interaction.editReply({
+                    embeds: AplikoBuildEmbeds(this.client, {
+                        style: AplikoEmbedStyle.ERROR,
+                        description: err.toString()
+                    })
+                }).catch(_ => {});
+            }
 
-        if (interaction.isSelectMenu()) {
-            context.currentPage.onSelect(
-                <PanelSelectMenuInteractionContext>{
-                    interaction: interaction,
-                    data: componentInteractionData,
-                    panelContext: context
-                },
-                componentInteractionData
-            );
-        }
+            interaction.reply({
+                embeds: AplikoBuildEmbeds(this.client, {
+                    style: AplikoEmbedStyle.ERROR,
+                    description: err.toString()
+                })
+            }).catch(_ => {})
+        })
     }
 
     public async onWSInteractionCreate(interaction: BaseInteraction) {
@@ -67,7 +85,27 @@ export class PanelManager {
                     panelContext: context
                 },
                 componentInteractionData
-            );
+            ).catch(err => {
+                if (interaction.didReply || interaction.wasReplyDeferred) {
+                    return interaction.editReply({
+                        embeds: [{
+                            style: AplikoEmbedStyle.ERROR,
+                            description: err.toString()
+                        }]
+                    }).catch(_ => {});
+                }
+
+                if (interaction.wasEditDeferred) {
+                    // TODO: Edit deferr error handling
+                }
+    
+                interaction.reply({
+                    embeds: [{
+                        style: AplikoEmbedStyle.ERROR,
+                        description: err.toString()
+                    }]
+                }).catch(_ => {})
+            });
         }
     }
 
