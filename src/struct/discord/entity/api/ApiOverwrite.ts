@@ -1,4 +1,4 @@
-import { OverwriteType } from "./enum/OverwriteType";
+import { OverwriteType } from "../enum/OverwriteType";
 
 export interface ApiOverwrite {
     readonly id: string;

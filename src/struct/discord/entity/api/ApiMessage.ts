@@ -1,6 +1,6 @@
-import { ApiComponent } from "../components/api/ApiComponent";
-import { ApiEmbed } from "../components/api/ApiEmbed";
-import { ApiMessageInteraction } from "../interactions/api/ApiMessageInteraction";
+import { ApiComponent } from "../../components/api/ApiComponent";
+import { ApiEmbed } from "../../components/api/ApiEmbed";
+import { ApiMessageInteraction } from "../../interactions/api/ApiMessageInteraction";
 import { ApiApplication } from "./ApiApplication";
 import { ApiAttachment } from "./ApiAttachment";
 import { ApiChannel } from "./ApiChannel";

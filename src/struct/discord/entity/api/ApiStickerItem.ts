@@ -1,4 +1,4 @@
-import { StickerFormatType } from "./enum/StickerFormatType";
+import { StickerFormatType } from "../enum/StickerFormatType";
 
 export interface ApiStickerItem {
     readonly id: string;

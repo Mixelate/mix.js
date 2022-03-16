@@ -1,4 +1,4 @@
-import { MessageActivityType } from "./enum/MessageActivityType";
+import { MessageActivityType } from "../enum/MessageActivityType";
 
 export interface ApiMessageActivity {
     type: MessageActivityType;

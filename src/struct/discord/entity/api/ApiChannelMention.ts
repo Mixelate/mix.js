@@ -1,4 +1,4 @@
-import { ChannelType } from "./enum/ChannelType";
+import { ChannelType } from "../enum/ChannelType";
 
 export interface ApiChannelMention {
     id: string;

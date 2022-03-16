@@ -1,6 +1,6 @@
 import { StickerFormatType } from "discord.js";
 import { ApiUser } from "./ApiUser";
-import { StickerType } from "./enum/StickerType";
+import { StickerType } from "../enum/StickerType";
 
 export interface ApiSticker {
     readonly id: string;
