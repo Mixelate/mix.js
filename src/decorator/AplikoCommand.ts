@@ -36,7 +36,7 @@ export function DefineCommand<T extends { new (...args: any[]): Command }>(Base:
     };
 }
 
-export const CommandExecutor = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+export const CommandExecutor = (skipOptions: boolean = false) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Extract the methods parameter types
     const paramNames = GetParameterNames(descriptor.value);
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey) as any[];
@@ -47,9 +47,9 @@ export const CommandExecutor = (target: any, propertyKey: string, descriptor: Pr
     const options: CommandOption[] = [];
 
     // If there's only a CommandInteraction parameter, we can skip option checks.
-    if (paramTypes.length > 1) {
-        const optionTypes = paramTypes.slice(0, paramTypes.length - 1);
-        const optionNames = paramNames.slice(0, paramNames.length - 1);
+    if (!skipOptions && paramTypes.length > 1) {
+        const optionTypes = paramTypes.reverse().slice(0, paramTypes.length - 1);
+        const optionNames = paramNames.reverse().slice(0, paramNames.length - 1);
 
         // Now let's dynamically register options using all parameters except ComandInteraction
         optionTypes.forEach((paramType, idx) => {
