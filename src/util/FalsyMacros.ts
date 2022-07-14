@@ -1,19 +1,78 @@
-import { Collection } from 'discord.js';
+/**
+ * Useful macros for quickly executing conditionals on variables and acting based on the result
+ * 
+ * @author antja03
+ */
 
-export function $falsyThrow<T>(message: string, value: T): NonNullable<T> {
-    if (value == null || value == undefined || (typeof value == 'number' && value == NaN)) throw message;
+/**
+ * Throws the provided message if the provided value is falsy
+ * 
+ * @param message The message thrown
+ * @param value The value to check
+ * @returns The value if it's not falsy or never if it is
+ */
+ export function $sftm<T>(message: string, value: T): NonNullable<T> {
+    if (value == null || value == undefined || (typeof value == 'number' && isNaN(value)))
+        throw message;
+
     return value!;
 }
 
-export function $falsyThrowParseI(message: string, value: string): number {
+/**
+ * Throws an error message if the provided value is falsy
+ * 
+ * @param value The value to check
+ * @returns The value if it's not falsy or never if it is
+ */
+ export function $sft<T>(value: T): NonNullable<T> {
+    return $sftm('An error occurred.', value);
+}
+
+/**
+ * Resolved the provided promise (with a rejection returning null) 
+ * and throws the provided message if the resolved value is falsy
+ * 
+ * @param message The message thrown
+ * @param promise The promise to resolve
+ * @returns The resolved value if it's not falsy or never if it is
+ */
+export async function $ftm<T>(message: string, promise: Promise<T>, print?: boolean) {
+    const resolved = await promise.catch(_ => {
+        if (print)
+            console.log(_);
+        return null;
+    });
+
+    if (resolved == null || resolved == undefined || (typeof resolved === 'number' && isNaN(resolved)))
+        throw message;
+
+    return resolved!;
+}
+
+/**
+ * Resolved the provided promise (with a rejection returning null) 
+ * and throws an error message if the resolved value is falsy
+ * 
+ * @param promise The promise to resolve
+ * @returns The resolved value if it's not falsy or never if it is
+ */
+ export async function $ft<T>(promise: Promise<T>, print?: boolean) {
+    return $ftm('An error occurred.', promise, print);
+}
+
+export function $ftmpi(message: string, value: string): number {
     const parsed = parseInt(value);
 
-    if (parsed == NaN) throw message;
+    if (isNaN(parsed)) throw message;
 
     return parsed;
 }
 
-export function $falsyThrowParseF(message: string, value: string): number {
+export function $ftpi(value: string): number {
+    return $ftmpi!('An error occurred.', value)
+}
+
+export function $ftmpf(message: string, value: string): number {
     const parsed = parseFloat(value);
 
     if (parsed == NaN) throw message;
@@ -21,7 +80,7 @@ export function $falsyThrowParseF(message: string, value: string): number {
     return parsed;
 }
 
-export function $falsyDefaultParseI(value: string, defaultValue: number): number {
+export function $fdpi(value: string, defaultValue: number): number {
     const parsed = parseInt(value);
 
     if (parsed == NaN) return defaultValue;

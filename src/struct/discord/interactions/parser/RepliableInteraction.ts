@@ -1,7 +1,7 @@
 import { APIMessage, MessageFlags } from 'discord-api-types/payloads/v9';
 import { Routes } from 'discord-api-types/rest/v9';
 import { Message } from 'discord.js';
-import { $falsyThrow, InteractionResponseType } from '../../../..';
+import { $sftm, InteractionResponseType } from '../../../..';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../../../util/conversion/AplikoEmbed.ts';
 import { ComponentsToDJS } from '../../../../util/conversion/ComponentsToDJS';
 import { Message as AplikoMessage } from '../../Message';
@@ -145,7 +145,7 @@ export class RepliableInteraction extends BaseInteraction {
      * Delets the original message
      */
     public async delete() {
-        const original = $falsyThrow!(`Failed to fetch original message`, await this.getWebhook().fetchMessage('@original')) as Message;
+        const original = $sftm!(`Failed to fetch original message`, await this.getWebhook().fetchMessage('@original')) as Message;
 
         await original.delete();
     }
