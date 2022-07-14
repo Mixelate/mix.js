@@ -34,7 +34,7 @@ Apliko has not yet been published to NPM so you'll have to add a file dependency
 Here's some code to get your simple bot up and running
 
 ```typescript
-import { AplikoBot } from 'apliko';
+import { Client } from 'apliko';
 
 const bot = new AplikoBot(
     intents: [
