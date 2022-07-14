@@ -34,15 +34,15 @@ export abstract class PanelPage implements CallbackHandler {
     }
 
     public async onModal(context: PanelModalInteractionContext, data: ComponentInteractionDataModel) {
-        this.modalCallbacks.get(data.componentId)?.apply(this, [context]);
+        await this.modalCallbacks.get(data.componentId)?.apply(this, [context]);
     }
 
     public async onButton(context: PanelButtonInteractionContext, data: ComponentInteractionDataModel) {
-        this.buttonCallbacks.get(data.componentId)?.apply(this, [context]);
+        await this.buttonCallbacks.get(data.componentId)?.apply(this, [context]);
     }
 
     public async onSelect(context: PanelDropdownInteractionContext, data: ComponentInteractionDataModel) {
-        this.dropdownCallbacks.get(data.componentId)?.apply(this, [context]);
+        await this.dropdownCallbacks.get(data.componentId)?.apply(this, [context]);
     }
 
     get client() {
