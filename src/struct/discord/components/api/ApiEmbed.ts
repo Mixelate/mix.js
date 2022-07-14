@@ -7,7 +7,7 @@ export interface ApiEmbed {
 
     timestamp?: string; 
 
-    color?: `#${string}`;
+    color?: number;
 
     footer?: ApiEmbedFooter;
 
