@@ -1,10 +1,10 @@
-import { GuildMember, Interaction, Message, MessageResolvable } from 'discord.js';
+import { GuildMember, Interaction, Message } from 'discord.js';
+
 import {
     BaseInteraction,
     ButtonCollectionResult,
     Client,
     ComponentCollectionKey,
-    ComponentCollectionKeyV2,
     ComponentCollectionResult,
     defer,
     Deferred,
@@ -19,7 +19,6 @@ import {
     ThrowError,
 } from '..';
 
-// TODO: Rewrite this son of a bitch
 export class CollectorManager {
 
     private awaitingComponent: Map<string, Deferred<ComponentCollectionResult>> = new Map();

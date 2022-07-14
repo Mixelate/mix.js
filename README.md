@@ -1,6 +1,15 @@
-## 💥 mix.js: A TypeScript Discord.js framework
+## 💥 Apliko: A TypeScript Discord.js framework
 
-mix.js is a Discord.js framework aimed at `making the work of professionals easier and faster`. It uses a decorators and a collection of modules to accomplish common tasks in Discord bots. These include slash commands, channel controllers, interaction handlers, and menus.
+Apliko is a Discord.js framework aimed at `making the work of professionals easier and faster`. It uses a collection of applications to accomplish common tasks in Discord bots. These include slash commands, channel controllers, questionnaires, and panels.
+
+## Apliko V2
+- Rewrote `AplikoBot`; Now called `Client`, it allows you to give a client access to specific guilds. It provides functions to fetch guilds and members based on the guilds the client has access to. (`Client:findGuild`, `Client:findMember`, `Client:fetchGuilds` This makes implementation of custom clients for large bots much easier. This feature can be completely disabled by never calling `Client:allowGuilds` or `Client:ignoreGuilds`. All events are now passed through `Client` to check for guild access before emitting the event. You can now listen to these events via `Client:on` with the arguments `'interactionCreate', 'wsInteractionCreate', 'messageCreate'`
+
+- Added `ClientManager` to manage client instances. Again, if you don't wish to use multiple clients this can be completely ignored and you can create a `Client` as usual. 
+
+- Rewrote the collector to force usage of full collection. All results now include the interaction instance so you can control how to handle it. Also created separate definitions of collection keys and results in the structs directory. 
+
+- Removed questionnaires
 
 ## Documentation
 
@@ -8,15 +17,16 @@ mix.js is a Discord.js framework aimed at `making the work of professionals easi
 
 ## Todo:
 
--   [ ] Write custom interaction and entity wrappers
--   [ ] Publish to NPM
+-   [ ] Finish rewriting interactions so you can send responses using class members instead of global util functions
+-   [x] Compare commands to existing commands so they don't edit if none are needed, removing the 'this command is outdated' error
+-   [ ] Clean up codebase, looks like 7 people coming from 7 different backgrounds have been working on this lmao
 
-## Use mix.js in your project
+## Use Apliko in your project
 
-As mix.js has not yet been published to NPM so you'll have to add a file dependency. Simply clone this repository into a new folder, and add this line to your depdendencies in package.json
+Apliko has not yet been published to NPM so you'll have to add a file dependency. Simply clone this repository into a new folder, and add this line to your depdendencies in package.json
 
 ```json
-"mix.js": "file:path/to/mix.js"
+"apliko": "file:path/to/Apliko"
 ```
 
 ## Getting Started

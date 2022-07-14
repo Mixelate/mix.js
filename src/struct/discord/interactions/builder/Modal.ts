@@ -1,5 +1,5 @@
 import { ValidationError } from '../../../error/ValidationError';
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { ActionRow, TextField } from '../../../..';
 
 export class Modal implements JsonSerializable {

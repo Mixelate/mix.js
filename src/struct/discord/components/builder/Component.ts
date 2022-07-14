@@ -1,4 +1,4 @@
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { ApiComponent } from '../../../..';
 import { ComponentType } from '../../../..';
 

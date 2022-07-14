@@ -22,10 +22,10 @@ export class CommandManager {
 
     public async createCommandsGlobal() {
         const guilds = await this.client.fetchGuilds();
-        
+
         guilds.forEach(guild => {
             console.log(this.client.options.id + ' ' + guild.name)
-            this.createCommandsInGuild(guild).catch((err) => {console.log(err)});
+            this.createCommandsInGuild(guild).catch((err) => { console.log(err) });
         });
     }
 
@@ -35,7 +35,7 @@ export class CommandManager {
 
         guildCommands
             .filter((guildCommand) => guildCommand.applicationId === this.client.discordClient.application!.id)
-            .forEach((guildCommand) => {
+            .forEach(async (guildCommand) => {
                 const matchingCommand = commandsToRegister.find((command) => command.name === guildCommand.name);
 
                 if (!matchingCommand) return guildCommand.delete();
@@ -84,39 +84,46 @@ export class CommandManager {
                     }
 
                 if (edit) {
-                    guild.commands.edit(guildCommand, compiledCommand.toJSON()).then(async (guildCommand) => {
-                        await guildCommand.permissions.set({
-                            permissions: [
-                                {
-                                    id: guild.roles.everyone.id,
-                                    type: ApplicationCommandPermissionTypes.ROLE,
-                                    permission: false
-                                },
-                                ...matchingCommand._allowedUsers.map((user) => {
-                                    return {
-                                        id: this.client.discordClient.users.resolveId(user)!,
-                                        type: ApplicationCommandPermissionTypes.USER,
-                                        permission: true
-                                    };
-                                })
-                            ]
+                    if (matchingCommand.allowedRoles.length != 0 || matchingCommand.allowedUsers.length != 0)
+                        guild.commands.edit(guildCommand, compiledCommand.toJSON()).then(async (guildCommand) => {
+                            await guildCommand.permissions.set({
+                                permissions: [
+                                    {
+                                        id: guild.roles.everyone.id,
+                                        type: ApplicationCommandPermissionTypes.ROLE,
+                                        permission: false
+                                    },
+                                    ...matchingCommand.allowedUsers.map((user) => {
+                                        return {
+                                            id: this.client.discordClient.users.resolveId(user)!,
+                                            type: ApplicationCommandPermissionTypes.USER,
+                                            permission: true
+                                        };
+                                    })
+                                ]
+                            });
                         });
-                    });
+                    else if ((await guildCommand.permissions.fetch({}).catch(_ => [])).length != 0)
+                        guild.commands.edit(guildCommand, compiledCommand.toJSON()).then(async (guildCommand) => {
+                            await guildCommand.permissions.set({
+                                permissions: []
+                            });
+                        });
                 } else console.log('No edits required for command: ' + compiledCommand.name);
                 commandsToRegister = commandsToRegister.filter((command) => command !== matchingCommand);
             });
 
         commandsToRegister.forEach((command) =>
             guild.commands.create(command.build().toJSON()).then(async (guildCommand) => {
-                await guildCommand.permissions.add({
-                    permissions: command._allowedUsers.map((user) => {
-                        return {
-                            id: this.client.discordClient.users.resolveId(user)!,
-                            type: ApplicationCommandPermissionTypes.USER,
-                            permission: true
-                        };
-                    })
-                });
+                // await guildCommand.permissions.add({
+                //     permissions: command._allowedUsers.map((user) => {
+                //         return {
+                //             id: this.client.discordClient.users.resolveId(user)!,
+                //             type: ApplicationCommandPermissionTypes.USER,
+                //             permission: true
+                //         };
+                //     })
+                // });
             })
         );
     }

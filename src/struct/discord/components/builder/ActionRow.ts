@@ -1,4 +1,4 @@
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { ComponentType } from '../enum/ComponentType';
 import { ApiComponent } from '../api/ApiComponent';
 import { ApiActionRow } from '../api/ApiActionRow';

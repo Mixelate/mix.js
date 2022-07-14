@@ -10,7 +10,7 @@ export class BaseInteraction {
     private readonly id: string;
     private readonly token: string;
     private readonly guildId?: string;
-    private readonly channelId: string;
+    private readonly channelId?: string;
     private readonly userId?: string;
     private readonly userName?: string;
     private readonly messageId?: string;
@@ -76,11 +76,11 @@ export class BaseInteraction {
     }
 
     public async fetchTextChannel(): Promise<TextBasedChannel> {
-        return $falsyThrow!(`Failed to fetch channel`, await this.client.discordClient.channels.fetch(this.channelId)) as TextBasedChannel;
+        return $falsyThrow!(`Failed to fetch channel`, await this.client.discordClient.channels.fetch(this.channelId!)) as TextBasedChannel;
     }
 
     public async resolveTextChannel(): Promise<TextBasedChannel> {
-        return $falsyThrow!(`Failed to resolve channel`, this.client.discordClient.channels.resolve(this.channelId)) as TextBasedChannel;
+        return $falsyThrow!(`Failed to resolve channel`, this.client.discordClient.channels.resolve(this.channelId!)) as TextBasedChannel;
     }
 
     public getClient() {

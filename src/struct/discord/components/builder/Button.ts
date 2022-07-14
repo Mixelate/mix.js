@@ -1,7 +1,7 @@
 import { ButtonStyle } from '../enum/ButtonStyle';
 import { ComponentType } from '../enum/ComponentType';
 import { ApiBaseButton, ApiInteractButton, InteractButtonStyle, ApiLinkButton, ApiButton } from '../api/ApiButton';
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { Component } from './Component';
 
 export abstract class Button<T extends ApiButton> extends Component<T> {

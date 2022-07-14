@@ -1,4 +1,4 @@
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { TextFieldStyle } from '../enum/TextFieldStyle';
 import { ApiTextField } from '../api/ApiTextField';
 import { ComponentType } from '../../../..';
@@ -13,7 +13,13 @@ export class TextField extends Component<ApiTextField> {
         return new TextField();
     }
 
+    // Leave this for now, used in other projects COMPATIBILITYYYYYYYYYY
     public customId(value: string): TextField {
+        this.data.custom_id = value;
+        return this;
+    }
+
+    public id(value: string): TextField {
         this.data.custom_id = value;
         return this;
     }

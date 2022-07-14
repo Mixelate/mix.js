@@ -1,10 +1,11 @@
 import { Interaction } from 'discord.js';
-import { AplikoEmbedStyle, BaseInteraction, Client, PanelButtonInteractionContext, PanelContext, PanelModalInteractionContext, PanelPage, PanelSelectMenuInteractionContext } from '..';
-import { FetchComponentInteractionData } from '../struct/apliko/ComponentInteractionData';
+import { AplikoEmbedStyle, BaseInteraction, Client, PanelButtonInteractionContext, PanelModalInteractionContext, PanelPage } from '..';
+import { FetchComponentInteractionData } from '../util/ComponentInteractionData';
 import { ApiBaseInteraction, ApiModalSubmitInteraction, IsApiModalInteraction } from '..';
 import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
 import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, RepliableInteraction, ThrowError } from '..';
 import { RespondableInteraction } from '../util/discord/DiscordTypes';
+import PanelContext, { PanelDropdownInteractionContext } from 'struct/application/panel/PanelContext';
 
 export type PanelPageClass = { new (...args: any[]): PanelPage };
 
@@ -43,7 +44,7 @@ export class PanelManager {
     
             if (interaction.isSelectMenu()) {
                 await context.currentPage.onSelect(
-                    <PanelSelectMenuInteractionContext>{
+                    <PanelDropdownInteractionContext>{
                         interaction: interaction,
                         data: componentInteractionData,
                         panelContext: context
@@ -128,7 +129,10 @@ export class PanelManager {
     }
 
     public async openDynamicPanel(interaction: RespondableInteraction, page: PanelPage) {
-        const replyMessage = await interaction.deferReply({
+        if (interaction.deferred && !interaction.ephemeral)
+            throw new Error('Attempting to use a non-ephemeral interaction for a panel.')
+
+        const replyMessage = interaction.deferred ? await interaction.fetchReply() : await interaction.deferReply({
             ephemeral: true,
             fetchReply: true
         }).catch(() => null);

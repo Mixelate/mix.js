@@ -1,6 +1,5 @@
-import { ApiGuildMember } from 'struct/discord/entity/ApiGuildMember';
-import { ApiUser } from 'struct/discord/entity/ApiUser';
-import { InteractionType } from '../../../..';
+
+import { ApiGuildMember, ApiUser, InteractionType } from '../../../..';
 
 export interface ApiBaseInteraction<T extends InteractionType = InteractionType> {
     readonly version: number;

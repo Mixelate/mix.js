@@ -1,6 +1,6 @@
 import { Client } from '..';
 import { Interaction, Message } from 'discord.js';
-import { Controller } from '../application/Controller';
+import { Controller } from '../struct/application/Controller';
 
 export class ControllerManager {
     private client: Client;

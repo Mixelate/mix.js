@@ -1,4 +1,4 @@
-import { JsonSerializable } from '../../../JsonSerializable';
+import { JsonSerializable } from '../../../misc/JsonSerializable';
 import { ApiDropdown, DropdownMaxValues, ApiDropdownOption, IsApiMultiSelectDropdown, MultiSelectDropdownData } from '../api/ApiDropdown';
 import { ComponentType } from '../../../..';
 import { Component } from './Component';
