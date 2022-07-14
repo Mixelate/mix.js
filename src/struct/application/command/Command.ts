@@ -55,7 +55,7 @@ export class Command {
 
                         if (!subCommand) ThrowError('COMMAND_MISSING_SUB_COMMAND');
 
-                        return subCommand.callback.apply(this, [interaction, ...this.resolveOptions(interaction)]);
+                        return subCommand.callback.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
                     }
                 } catch (err) {
                     throw 'An unknown error has occured. (SUB_COMMAND_DEFINITION)';
@@ -64,7 +64,7 @@ export class Command {
 
             if (!this._executor) return;
 
-            return this._executor.apply(this, [interaction, ...this.resolveOptions(interaction)]);
+            return this._executor.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
         } catch (error: any) {
             await interaction.deferReply({ ephemeral: true }).catch((_) => {});
             await interaction.editReply({
@@ -79,27 +79,31 @@ export class Command {
         }
     }
 
-    public resolveOptions(interaction: CommandInteraction): any[] {
+    public async resolveOptions(interaction: CommandInteraction): Promise<any[]> {
         const args: any[] = [];
 
-        if (interaction.options.data[0]?.options) {
-            for (const option of interaction.options.data[0].options!) {
-                const object = this.resolveOption(interaction, option) || ThrowError('COMMAND_FALSY_RESOLVED_OPTION: ' + option.name);
+        if (this._options.length == 0)
+            return args;
 
-                args.push(object);
-            }
+        for (const option of this._options) {
+            const raw = interaction.options.get(option.name);
+
+            if (raw === null)
+                continue;
+
+            args.push(await this.resolveOption(interaction, raw));
         }
 
         return args;
     }
 
-    public resolveOption(interaction: CommandInteraction, option: CommandInteractionOption): any {
+    public async resolveOption(interaction: CommandInteraction, option: CommandInteractionOption): Promise<any> {
         if (option.type === 'STRING') return option.value as string;
 
         if (option.type === 'INTEGER') return option.value as number;
 
         if (option.type === 'CHANNEL') {
-            const channel = interaction.guild!.channels.resolve(option.channel!.id);
+            const channel = await this.client.findChannel(interaction.guildId!, option.value as string);
 
             if (!channel) return undefined;
 
