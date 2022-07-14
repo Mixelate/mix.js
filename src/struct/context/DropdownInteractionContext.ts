@@ -1,6 +1,6 @@
 import { SelectMenuInteraction } from "discord.js";
-import InteractionContext from "./InteractionContext";
+import { InteractionContext } from "./InteractionContext";
 
-export default interface DropdownInteractionContext extends InteractionContext {
+export interface DropdownInteractionContext extends InteractionContext {
     interaction: SelectMenuInteraction;
 }

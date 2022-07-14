@@ -5,8 +5,8 @@ import { ThrowError } from '../util/Errors';
 import { SymbolCommandOptions, SymbolDescription, SymbolName, SymbolSubCommands } from './AplikoCommand';
 import { ChannelType } from 'discord-api-types';
 import { GetParameterNames } from '../util/Reflection';
-import SubCommand from 'struct/application/command/SubCommand';
-import { ChannelCommandOption, IntegerCommandOption, RoleCommandOption, StringCommandOption, UserCommandOption } from 'struct/application/command/CommandOptions';
+import { ChannelCommandOption, IntegerCommandOption, RoleCommandOption, StringCommandOption, UserCommandOption } from '../struct/application/command/CommandOptions';
+import { SubCommand } from '../struct/application/command/SubCommand';
 
 export const SubCommandExecutor =
     (name: string = '', description: string = '\u200b') =>

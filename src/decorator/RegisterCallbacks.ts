@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
-import ButtonInteractionContext from 'struct/context/ButtonInteractionContext';
-import DropdownInteractionContext from 'struct/context/DropdownInteractionContext';
-import ModalInteractionContext from 'struct/context/ModalInteractionContext';
+import { ButtonInteractionContext } from '../struct/context/ButtonInteractionContext';
+import { DropdownInteractionContext } from '../struct/context/DropdownInteractionContext';
+import { ModalInteractionContext } from '../struct/context/ModalInteractionContext';
 
 import {
     ButtonCallbacks,

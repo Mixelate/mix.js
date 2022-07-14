@@ -5,7 +5,7 @@ import { ApiBaseInteraction, ApiModalSubmitInteraction, IsApiModalInteraction } 
 import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
 import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, RepliableInteraction, ThrowError } from '..';
 import { RespondableInteraction } from '../util/discord/DiscordTypes';
-import PanelContext, { PanelDropdownInteractionContext } from 'struct/application/panel/PanelContext';
+import { PanelContext, PanelDropdownInteractionContext } from '../struct/application/panel/PanelContext';
 
 export type PanelPageClass = { new (...args: any[]): PanelPage };
 
@@ -166,7 +166,8 @@ export class PanelManager {
         const pageContent = await context.currentPage.constructPage(context);
 
         const res = await context.interaction.editReply({
-            embeds: AplikoBuildEmbeds(this.client, ...pageContent.embeds),
+            files: pageContent.attachments,
+            embeds: pageContent.embeds ? AplikoBuildEmbeds(this.client, ...pageContent.embeds) : undefined,
             components: ComponentsToDJS(...pageContent.components)
         }).catch(() => null);
     }

@@ -48,6 +48,7 @@ export * from "./struct/discord/components/builder/ActionRow";
 export * from "./struct/discord/components/builder/Button";
 export * from "./struct/discord/components/builder/Component";
 export * from "./struct/discord/components/builder/Dropdown";
+export * from "./struct/discord/components/builder/Embed";
 export * from "./struct/discord/components/builder/TextField";
 export * from "./struct/discord/components/enum/ButtonStyle";
 export * from "./struct/discord/components/enum/ComponentType";

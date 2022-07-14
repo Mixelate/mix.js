@@ -1,5 +1,5 @@
 import { ButtonInteraction } from 'discord.js';
-import ButtonInteractionContext from 'struct/context/ButtonInteractionContext';
+import { ButtonInteractionContext } from '../struct/context/ButtonInteractionContext';
 import { ThrowError } from '../util/Errors';
 import { GetParameterNames } from '../util/Reflection';
 import { ButtonCallbacks, CALLBACK_WILDCARD } from './DecoratorSymbols';

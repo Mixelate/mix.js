@@ -1,5 +1,5 @@
 import { SelectMenuInteraction } from 'discord.js';
-import DropdownInteractionContext from 'struct/context/DropdownInteractionContext';
+import { DropdownInteractionContext } from '../struct/context/DropdownInteractionContext';
 import { SelectCallbacks, CALLBACK_WILDCARD } from './DecoratorSymbols';
 
 export const DropdownCallback =

@@ -1,11 +1,8 @@
-import { Client, PageContent } from '../../..';
+import { ButtonInteractionContext, Client, DropdownInteractionContext, ModalInteractionContext, PageContent } from '../../..';
 import { CallbackHandler } from '../../../decorator/RegisterCallbacks';
 import { ComponentInteractionDataModel } from '../../../util/ComponentInteractionData';
 import { AplikoEmbed, AplikoEmbedStyle } from '../../../util/conversion/AplikoEmbed.ts';
-import PanelContext, { PanelButtonInteractionContext, PanelDropdownInteractionContext, PanelModalInteractionContext } from 'struct/application/panel/PanelContext';
-import ButtonInteractionContext from 'struct/context/ButtonInteractionContext';
-import DropdownInteractionContext from 'struct/context/DropdownInteractionContext';
-import ModalInteractionContext from 'struct/context/ModalInteractionContext';
+import { PanelButtonInteractionContext, PanelContext, PanelDropdownInteractionContext, PanelModalInteractionContext } from '../../../struct/application/panel/PanelContext';
 
 export abstract class PanelPage implements CallbackHandler {
     

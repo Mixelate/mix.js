@@ -1,5 +1,5 @@
 import { ComponentInteractionDataModel } from "../../util/ComponentInteractionData";
 
-export default interface InteractionContext {
+export interface InteractionContext {
     data: ComponentInteractionDataModel;
 }

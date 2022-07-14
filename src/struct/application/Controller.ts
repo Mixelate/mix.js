@@ -1,5 +1,5 @@
 import { Interaction, Message, TextChannel } from 'discord.js';
-import { BaseInteraction, CallbackHandler, Client, InteractionType } from '../..';
+import { BaseInteraction, ButtonInteractionContext, CallbackHandler, Client, DropdownInteractionContext, InteractionType, ModalInteractionContext } from '../..';
 
 import { FetchComponentInteractionData } from '../../util/ComponentInteractionData';
 import { ApiBaseInteraction } from '../discord/interactions/api/ApiBaseInteraction';
@@ -7,9 +7,6 @@ import { ApiModalSubmitInteraction, IsApiModalInteraction } from '../discord/int
 import { ModalSubmitInteraction } from '../discord/interactions/parser/ModalSubmitInteraction';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../util/conversion/AplikoEmbed.ts';
 import { SilentCatch, ThrowError } from '../../util/Errors';
-import ButtonInteractionContext from 'struct/context/ButtonInteractionContext';
-import DropdownInteractionContext from 'struct/context/DropdownInteractionContext';
-import ModalInteractionContext from 'struct/context/ModalInteractionContext';
 
 export class Controller implements CallbackHandler {
 

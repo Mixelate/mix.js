@@ -1,9 +1,6 @@
 import { Interaction, Message } from 'discord.js';
-import ButtonInteractionContext from 'struct/context/ButtonInteractionContext';
-import DropdownInteractionContext from 'struct/context/DropdownInteractionContext';
-import ModalInteractionContext from 'struct/context/ModalInteractionContext';
 
-import { BaseInteraction, CallbackHandler, Client } from '../..';
+import { BaseInteraction, ButtonInteractionContext, CallbackHandler, Client, DropdownInteractionContext, ModalInteractionContext } from '../..';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../util/conversion/AplikoEmbed.ts';
 import { FetchComponentInteractionData } from '../../util/ComponentInteractionData';
 import { ModalSubmitInteraction } from '../discord/interactions/parser/ModalSubmitInteraction';

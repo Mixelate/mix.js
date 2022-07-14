@@ -1,7 +1,7 @@
 import { Util } from "discord.js";
 import { ApiEmbed, ApiEmbedField } from "../api/ApiEmbed";
 
-export default class Embed {
+export class Embed {
 
     private data: ApiEmbed;
     private useTwoColumnFieldRows: boolean;

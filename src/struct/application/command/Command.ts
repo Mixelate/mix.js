@@ -17,11 +17,10 @@ import {
     UserResolvable,
 } from 'discord.js';
 
-import { Client } from '../../..';
+import { Client, SubCommand } from '../../..';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../../util/conversion/AplikoEmbed.ts';
 import { ThrowError } from '../../../util/Errors';
 import { CommandOption } from './CommandOptions';
-import SubCommand from './SubCommand';
 
 export class Command {
     

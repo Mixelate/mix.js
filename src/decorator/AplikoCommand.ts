@@ -1,8 +1,9 @@
-import { ChannelType } from 'discord-api-types';
-import { Command } from 'struct/application/command/Command';
-import { ChannelCommandOption, CommandOption, IntegerCommandOption, RoleCommandOption, StringCommandOption, UserCommandOption } from 'struct/application/command/CommandOptions';
-import { ThrowError } from '../util/Errors';
-import { GetParameterNames } from '../util/Reflection';
+import { ChannelType } from "discord-api-types";
+import { Command } from "../struct/application/command/Command";
+import { ChannelCommandOption, CommandOption, IntegerCommandOption, RoleCommandOption, StringCommandOption, UserCommandOption } from "../struct/application/command/CommandOptions";
+import { ThrowError } from "../util/Errors";
+import { GetParameterNames } from "../util/Reflection";
+
 
 export const SymbolSubCommands = Symbol('___SubCommands');
 export const SymbolCommandOptions = Symbol('___CommandOptions');
