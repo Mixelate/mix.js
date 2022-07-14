@@ -3,10 +3,10 @@
  */
 
 export * from "./Client";
-export * from "./decorator/DecoratorSymbols";
 export * from "./decorator/AplikoCommand";
 export * from "./decorator/AplikoSubCommand";
 export * from "./decorator/ButtonCallback";
+export * from "./decorator/DecoratorSymbols";
 export * from "./decorator/LoadCallback";
 export * from "./decorator/MessageCallback";
 export * from "./decorator/ModalCallback";
