@@ -1,4 +1,4 @@
-import { Interaction, Message } from 'discord.js';
+import { Interaction, Message, TextChannel } from 'discord.js';
 
 import { BaseInteraction, ButtonInteractionContext, CallbackHandler, Client, DropdownInteractionContext, ModalInteractionContext } from '../..';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../util/conversion/AplikoEmbed.ts';
@@ -86,16 +86,30 @@ export class InteractionHandler implements CallbackHandler {
         } catch (error: any) {
             if (!error) return console.log(error);
 
-            await interaction.deferReply({ ephemeral: true }).catch((_) => {});
-            await interaction.editReply({
-                embeds: AplikoBuildEmbeds(this.client, {
-                    style: AplikoEmbedStyle.ERROR,
-                    description: 'An error occurred while processing your interaction.',
-                    footer: {
-                        content: error.toString()
-                    }
-                })
-            });
+            if (interaction.deferred)
+                return await interaction.editReply({
+                    embeds: AplikoBuildEmbeds(this.client, {
+                        style: AplikoEmbedStyle.ERROR,
+                        description: 'An error occurred while processing your interaction.',
+                        footer: {
+                            content: error.toString()
+                        }
+                    }),
+                    components: [],
+                    files: []
+                }).catch(async _ => {
+                    await interaction.channel?.messages.resolve(interaction.message.id)?.edit({
+                        embeds: AplikoBuildEmbeds(this.client, {
+                            style: AplikoEmbedStyle.ERROR,
+                            description: 'An error occurred while processing your interaction.',
+                            footer: {
+                                content: error.toString()
+                            }
+                        }),
+                        components: [],
+                        files: []
+                    }).catch(_ => null)
+                });
         }
     }
 
