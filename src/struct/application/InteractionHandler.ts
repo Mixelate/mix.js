@@ -110,6 +110,16 @@ export class InteractionHandler implements CallbackHandler {
                         files: []
                     }).catch(_ => null)
                 });
+            else
+                interaction.reply({
+                    embeds: AplikoBuildEmbeds(this.client, {
+                        style: AplikoEmbedStyle.ERROR,
+                        description: 'An error occurred while processing your interaction.',
+                        footer: {
+                            content: error.toString()
+                        }
+                    })
+                }).catch(_ => null)
         }
     }
 
