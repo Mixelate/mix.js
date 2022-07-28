@@ -88,6 +88,10 @@ export function $fdpi(value: string, defaultValue: number): number {
     return parsed;
 }
 
+export function $if<T>(condition: boolean, value: T): T | undefined {
+    return condition ? value : undefined;
+}
+
 // /**
 //  * Normal forEach loops call the asynchronous function with each item in the array at the same time
 //  * and continues execution when all of them finish. { @link $forEachAsync } calls the asynchronous function
