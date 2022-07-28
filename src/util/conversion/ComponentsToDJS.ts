@@ -2,8 +2,8 @@ import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
 import { ApiButton, ApiComponent, ButtonStyle, ComponentType, IsApiButton, IsApiDropdown, IsApiInteractButton, IsApiLinkButton, IsApiMultiSelectDropdown, IsApiTextField } from '../..';
 import { ActionRow } from '../../struct/discord/components/builder/ActionRow';
 
-export function ComponentsToDJS(...actionRows: ActionRow[]): MessageActionRow[] {
-    const apiActionRows = actionRows.map((actionRow) => actionRow.toJSON());
+export function ComponentsToDJS(...actionRows: (ActionRow | undefined)[]): MessageActionRow[] {
+    const apiActionRows = actionRows.filter(actionRow => actionRow != undefined).map((actionRow) => actionRow!.toJSON());
     const djsActionRows: MessageActionRow[] = [];
 
     for (const actionRow of apiActionRows) {
