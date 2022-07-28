@@ -3,6 +3,8 @@ import { ApiEmbed, ApiEmbedField } from "../api/ApiEmbed";
 
 export class Embed {
 
+    public static DEFAULT_COLOR: `#${string}` = '#65a7e6'
+
     private data: ApiEmbed;
     private useTwoColumnFieldRows: boolean;
 
@@ -12,7 +14,7 @@ export class Embed {
     }
 
     public static new(): Embed {
-        return new Embed().color('#65a7e6');
+        return new Embed().color(this.DEFAULT_COLOR);
     }
 
     public title(title: string): Embed {

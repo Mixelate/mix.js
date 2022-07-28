@@ -165,11 +165,11 @@ export class PanelManager {
     public async refreshPage(context: PanelContext) {
         const pageContent = await context.currentPage.constructPage(context);
 
-        const res = await context.interaction.editReply({
+        await context.interaction.editReply({
             files: pageContent.attachments,
             embeds: pageContent.embeds ? AplikoBuildEmbeds(this.client, ...pageContent.embeds) : undefined,
             components: ComponentsToDJS(...pageContent.components)
-        }).catch(() => null);
+        }).catch((a) => null);
     }
 
     public registerPage(page: PanelPage) {
