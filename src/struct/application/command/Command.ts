@@ -54,7 +54,9 @@ export class Command {
 
                         if (!subCommand) ThrowError('COMMAND_MISSING_SUB_COMMAND');
 
-                        return subCommand.callback.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
+                        const options = await this.resolveOptions(interaction);
+
+                        return subCommand.callback.apply(this, [interaction, ...await this.resolveOptions(interaction, subCommand)]);
                     }
                 } catch (err) {
                     throw 'An unknown error has occured. (SUB_COMMAND_DEFINITION)';
@@ -78,13 +80,21 @@ export class Command {
         }
     }
 
-    public async resolveOptions(interaction: CommandInteraction): Promise<any[]> {
+    public async resolveOptions(interaction: CommandInteraction, subCommand?: SubCommand): Promise<any[]> {
         const args: any[] = [];
 
-        if (this._options.length == 0)
-            return args;
+        if (subCommand) {
+            if (!subCommand.options)
+                return args;
 
-        for (const option of this._options) {
+            if (subCommand.options.length == 0)
+                return args;
+        } else {
+            if (this._options.length == 0)
+                return args;
+        }
+
+        for (const option of subCommand ? subCommand.options! : this._options) {
             const raw = interaction.options.get(option.name);
 
             if (raw === null)
