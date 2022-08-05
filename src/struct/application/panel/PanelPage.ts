@@ -5,11 +5,21 @@ import { AplikoEmbed, AplikoEmbedStyle } from '../../../util/conversion/AplikoEm
 import { PanelButtonInteractionContext, PanelContext, PanelDropdownInteractionContext, PanelModalInteractionContext } from '../../../struct/application/panel/PanelContext';
 
 export abstract class PanelPage implements CallbackHandler {
-    
+
     private _client: Client;
     public buttonCallbacks: Map<string, (context: ButtonInteractionContext) => Promise<any>>;
     public dropdownCallbacks: Map<string, (context: DropdownInteractionContext) => Promise<any>>;
     public modalCallbacks: Map<string, (context: ModalInteractionContext) => Promise<any>>;
+
+    public static defaultPageContent: PageContent = {
+        embeds: [
+            <AplikoEmbed>{
+                style: AplikoEmbedStyle.ERROR,
+                description: 'Page not configured.'
+            }
+        ],
+        components: []
+    }
 
     public constructor(client: Client) {
         this._client = client;
@@ -18,16 +28,16 @@ export abstract class PanelPage implements CallbackHandler {
         this.modalCallbacks = new Map();
     }
 
-    public async constructPage(context: PanelContext): Promise<PageContent> {
-        return {
-            embeds: [
-                <AplikoEmbed>{
-                    style: AplikoEmbedStyle.ERROR,
-                    description: 'Page not configured.'
-                }
-            ],
-            components: []
-        };
+    public constructSkeleton(context: PanelContext): PageContent | undefined {
+        return undefined;
+    }
+
+    public async constructPage(context: PanelContext): Promise<PageContent | undefined> {
+        return PanelPage.defaultPageContent;
+    }
+
+    public async loadDynamicContent(context: PanelContext) {
+        
     }
 
     public async onModal(context: PanelModalInteractionContext, data: ComponentInteractionDataModel) {

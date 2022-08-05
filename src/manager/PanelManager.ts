@@ -7,7 +7,7 @@ import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, Repliable
 import { RespondableInteraction } from '../util/discord/DiscordTypes';
 import { PanelContext, PanelDropdownInteractionContext } from '../struct/application/panel/PanelContext';
 
-export type PanelPageClass = { new (...args: any[]): PanelPage };
+export type PanelPageClass = { new(...args: any[]): PanelPage };
 
 export class PanelManager {
     private client: Client;
@@ -41,7 +41,7 @@ export class PanelManager {
                     componentInteractionData
                 );
             }
-    
+
             if (interaction.isSelectMenu()) {
                 await context.currentPage.onSelect(
                     <PanelDropdownInteractionContext>{
@@ -59,7 +59,7 @@ export class PanelManager {
                         style: AplikoEmbedStyle.ERROR,
                         description: err.toString()
                     })
-                }).catch(_ => {});
+                }).catch(_ => { });
             }
 
             interaction.reply({
@@ -67,7 +67,7 @@ export class PanelManager {
                     style: AplikoEmbedStyle.ERROR,
                     description: err.toString()
                 })
-            }).catch(_ => {})
+            }).catch(_ => { })
         })
     }
 
@@ -93,19 +93,19 @@ export class PanelManager {
                             style: AplikoEmbedStyle.ERROR,
                             description: err.toString()
                         }]
-                    }).catch(_ => {});
+                    }).catch(_ => { });
                 }
 
                 if (interaction.wasEditDeferred) {
                     // TODO: Edit deferr error handling
                 }
-    
+
                 interaction.reply({
                     embeds: [{
                         style: AplikoEmbedStyle.ERROR,
                         description: err.toString()
                     }]
-                }).catch(_ => {})
+                }).catch(_ => { })
             });
         }
     }
@@ -163,13 +163,32 @@ export class PanelManager {
     }
 
     public async refreshPage(context: PanelContext) {
-        const pageContent = await context.currentPage.constructPage(context);
+        const pageSkeleton = context.currentPage.constructSkeleton(context);
+
+        if (pageSkeleton)
+            await context.interaction.editReply({
+                files: pageSkeleton.attachments,
+                embeds: pageSkeleton.embeds ? AplikoBuildEmbeds(this.client, ...pageSkeleton.embeds) : undefined,
+                components: ComponentsToDJS(...pageSkeleton.components)
+            }).catch(_ => null)
+
+        await context.currentPage.loadDynamicContent(context);
+
+        let pageContent = await context.currentPage.constructPage(context);
+
+        if (!pageContent && pageSkeleton)
+            return;
+
+        if (!pageContent && !pageSkeleton)
+            pageContent = PanelPage.defaultPageContent
 
         await context.interaction.editReply({
-            files: pageContent.attachments,
-            embeds: pageContent.embeds ? AplikoBuildEmbeds(this.client, ...pageContent.embeds) : undefined,
-            components: ComponentsToDJS(...pageContent.components)
-        }).catch((a) => null);
+            files: pageContent!.attachments,
+            embeds: pageContent!.embeds ? AplikoBuildEmbeds(this.client, ...pageContent!.embeds) : undefined,
+            components: ComponentsToDJS(...pageContent!.components)
+        }).catch(_ => null);
+
+
     }
 
     public registerPage(page: PanelPage) {
