@@ -10,6 +10,7 @@ import {
     IntentsString,
     Interaction,
     Message,
+    ShardingManager,
     TextChannel,
 } from 'discord.js';
 import EventEmitter from 'events';
@@ -43,7 +44,7 @@ export class Client extends EventEmitter {
         this.panelManager = new PanelManager(this);
         this.controllerManager = new ControllerManager(this);
         this.collectorManager = new CollectorManager(this);
-
+        
         this.allowedGuilds = options.allowGuilds;
         this.ignoredGuilds = options.ignoreGuilds;
 

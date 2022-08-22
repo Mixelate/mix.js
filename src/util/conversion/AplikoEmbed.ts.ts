@@ -132,7 +132,7 @@ export function AplikoBuildEmbeds(client: Client, ...aplikoEmbeds: AplikoEmbed[]
 
                 messageEmbed.addField(aplikoEmbedField.title, aplikoEmbedField.content, aplikoEmbedField.inline ? aplikoEmbedField.inline : false);
 
-                if (AplikoEmbedTwoColumnRows && aplikoEmbedField.inline && (messageEmbed.fields.length % 4 === 0 || messageEmbed.fields.length === 1))
+                if (AplikoEmbedTwoColumnRows && aplikoEmbedField.inline && ((messageEmbed.fields.length - 1) % 3 === 0 || messageEmbed.fields.length === 1))
                     messageEmbed.addField(
                         '\u200b', // Invis space
                         '\u200b', // Invis space

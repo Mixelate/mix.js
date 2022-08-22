@@ -38,7 +38,7 @@ export async function CreatePrivateChannel(options: CreatePrivateChannelOptions)
             permissionOverwrites.push({
                 type: 'member',
                 id: allowedMember,
-                allow: [Permissions.FLAGS.VIEW_CHANNEL]
+                allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES]
             });
         });
 

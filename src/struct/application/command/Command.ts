@@ -23,13 +23,14 @@ import { ThrowError } from '../../../util/Errors';
 import { CommandOption } from './CommandOptions';
 
 export class Command {
-    
+
     private _client: Client;
     protected _name: string;
     protected _description: string;
     protected _executor?: Function;
     protected _subCommands: SubCommand[];
     protected _options: CommandOption[];
+    protected _allowByDefault: boolean;
     protected _requirePermissions: PermissionResolvable[];
     protected _allowedRoles: RoleResolvable[];
     protected _allowedUsers: UserResolvable[];
@@ -40,6 +41,7 @@ export class Command {
         this._description = '\u200b';
         this._subCommands = [];
         this._options = [];
+        this._allowByDefault = true;
         this._requirePermissions = [];
         this._allowedRoles = [];
         this._allowedUsers = [];
@@ -67,7 +69,7 @@ export class Command {
 
             return this._executor.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
         } catch (error: any) {
-            await interaction.deferReply({ ephemeral: true }).catch((_) => {});
+            await interaction.deferReply({ ephemeral: true }).catch((_) => { });
             await interaction.editReply({
                 embeds: AplikoBuildEmbeds(this.client, {
                     style: AplikoEmbedStyle.ERROR,
@@ -139,7 +141,10 @@ export class Command {
     public build(): SlashCommandBuilder {
         if (!this._name) this._name = this.constructor.name;
 
-        const commandBuilder = new SlashCommandBuilder().setName(this._name).setDescription(this._description);
+        const commandBuilder = new SlashCommandBuilder()
+            .setName(this._name)
+            .setDescription(this._description)
+            .setDefaultPermission(this._allowByDefault)
 
         this.buildOptions(commandBuilder, this._options);
         this.buildSubCommands(commandBuilder);
@@ -205,6 +210,10 @@ export class Command {
 
             builder.addSubcommand(subCommandBuilder);
         }
+    }
+
+    defaultDisallow() {
+        this._allowByDefault = false;
     }
 
     protected get client(): Client {

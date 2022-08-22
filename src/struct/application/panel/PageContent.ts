@@ -5,7 +5,7 @@ import { ActionRow } from '../../..';
 export interface PageContent {
     embeds?: AplikoEmbed[]; 
 
-    components: ActionRow[];
+    components: (ActionRow | undefined)[];
 
     attachments?: MessageAttachment[]
 }

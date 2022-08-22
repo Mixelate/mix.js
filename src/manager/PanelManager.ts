@@ -3,7 +3,7 @@ import { AplikoEmbedStyle, BaseInteraction, Client, PanelButtonInteractionContex
 import { FetchComponentInteractionData } from '../util/ComponentInteractionData';
 import { ApiBaseInteraction, ApiModalSubmitInteraction, IsApiModalInteraction } from '..';
 import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
-import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, RepliableInteraction, ThrowError } from '..';
+import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, RepliableInteraction, ThrowError, Embed } from '..';
 import { RespondableInteraction } from '../util/discord/DiscordTypes';
 import { PanelContext, PanelDropdownInteractionContext } from '../struct/application/panel/PanelContext';
 
@@ -132,13 +132,27 @@ export class PanelManager {
         if (interaction.deferred && !interaction.ephemeral)
             throw new Error('Attempting to use a non-ephemeral interaction for a panel.')
 
-        const replyMessage = interaction.deferred ? await interaction.fetchReply() : await interaction.deferReply({
-            ephemeral: true,
-            fetchReply: true
-        }).catch(() => null);
+        const replyMessage = interaction.deferred
+            ? await interaction.fetchReply()
+            : await interaction.deferReply({
+                ephemeral: true,
+                fetchReply: true
+            }).catch(() => null);
 
         if (!replyMessage)
-            return;
+            throw new Error('Failed to fetch interaction reply message? Did you update or defer?')
+
+        const prereqResult = await page.checkPrereqs(interaction);
+
+        if (!prereqResult.success)
+            return interaction.editReply({
+                embeds: [
+                    Embed.new()
+                        .danger()
+                        .description(prereqResult.message || 'An unknown error occured while opening that menu.')
+                        .toJSON()
+                ]
+            })
 
         const context = {
             interaction,
@@ -162,25 +176,30 @@ export class PanelManager {
         await this.refreshPage(context);
     }
 
-    public async refreshPage(context: PanelContext) {
-        const pageSkeleton = context.currentPage.constructSkeleton(context);
+    public async refreshPage(context: PanelContext, disabled?: boolean) {
+        const skeleton = context.currentPage.constructSkeleton(context);
 
-        if (pageSkeleton)
+        if (disabled)
+            skeleton?.components.forEach(component => component?.disable())
+
+        if (skeleton)
             await context.interaction.editReply({
-                files: pageSkeleton.attachments,
-                embeds: pageSkeleton.embeds ? AplikoBuildEmbeds(this.client, ...pageSkeleton.embeds) : undefined,
-                components: ComponentsToDJS(...pageSkeleton.components)
+                files: skeleton.attachments,
+                embeds: skeleton.embeds ? AplikoBuildEmbeds(this.client, ...skeleton.embeds) : undefined,
+                components: ComponentsToDJS(...skeleton.components)
             }).catch(_ => null)
 
-        await context.currentPage.loadDynamicContent(context);
 
-        let pageContent = await context.currentPage.constructPage(context);
+        let pageContent = await context.currentPage.construct(context, skeleton);
 
-        if (!pageContent && pageSkeleton)
+        if (!pageContent && skeleton)
             return;
 
-        if (!pageContent && !pageSkeleton)
+        if (!pageContent && !skeleton)
             pageContent = PanelPage.defaultPageContent
+
+        if (disabled)
+            pageContent?.components.forEach(component => component?.disable())
 
         await context.interaction.editReply({
             files: pageContent!.attachments,

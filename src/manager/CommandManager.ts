@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Guild, Interaction } from 'discord.js';
-import { ApplicationCommandPermissionTypes } from 'discord.js/typings/enums';
+
 import { Client, Command } from '../..';
 
 export class CommandManager {
@@ -38,78 +38,48 @@ export class CommandManager {
             .forEach(async (guildCommand) => {
                 const matchingCommand = commandsToRegister.find((command) => command.name === guildCommand.name);
 
-                if (!matchingCommand) return guildCommand.delete();
+                if (!matchingCommand)
+                    return guildCommand.delete();
 
                 const compiledCommand = matchingCommand.build();
-                let edit = true;
 
-                if (guildCommand.description != compiledCommand.description) edit = true;
+                let edit = guildCommand.description != compiledCommand.description
+                    || guildCommand.options.length != compiledCommand.options.length
+                    || guildCommand.defaultPermission != compiledCommand.defaultPermission
+                    || !guildCommand.options.map(option => {
+                        const matchingOption = compiledCommand.options
+                            .map(_ => _.toJSON())
+                            .find(matchingOption => matchingOption.name === option.name);
 
-                if (!edit && guildCommand.options.length != compiledCommand.options.length) edit = true;
+                        if (!matchingOption)
+                            return false;
 
-                if (!edit)
-                    for (const guildCommandOption of guildCommand.options) {
-                        const matchingOption = compiledCommand.options.map((option) => option.toJSON()).find((option) => (option.name = guildCommandOption.name));
+                        if (matchingOption.description != option.description)
+                            return false;
 
-                        if (!matchingOption) {
-                            edit = true;
-                            break;
-                        }
-
-                        if (matchingOption.description != guildCommandOption.description) {
-                            edit = true;
-                            break;
-                        }
-
-                        if ('required' in guildCommandOption && matchingOption.required != guildCommandOption.required) {
-                            edit = true;
-                            break;
-                        }
+                        if ('required' in option && matchingOption.required != option.required)
+                            return false;
 
                         if (
-                            (guildCommandOption.type === 'SUB_COMMAND' && matchingOption.type != ApplicationCommandOptionType.Subcommand) ||
-                            (guildCommandOption.type === 'SUB_COMMAND_GROUP' && matchingOption.type != ApplicationCommandOptionType.SubcommandGroup) ||
-                            (guildCommandOption.type === 'STRING' && matchingOption.type != ApplicationCommandOptionType.String) ||
-                            (guildCommandOption.type === 'INTEGER' && matchingOption.type != ApplicationCommandOptionType.Integer) ||
-                            (guildCommandOption.type === 'BOOLEAN' && matchingOption.type != ApplicationCommandOptionType.Boolean) ||
-                            (guildCommandOption.type === 'USER' && matchingOption.type != ApplicationCommandOptionType.User) ||
-                            (guildCommandOption.type === 'CHANNEL' && matchingOption.type != ApplicationCommandOptionType.Channel) ||
-                            (guildCommandOption.type === 'ROLE' && matchingOption.type != ApplicationCommandOptionType.Role) ||
-                            (guildCommandOption.type === 'MENTIONABLE' && matchingOption.type != ApplicationCommandOptionType.Mentionable) ||
-                            (guildCommandOption.type === 'NUMBER' && matchingOption.type != ApplicationCommandOptionType.Number)
-                        ) {
-                            edit = true;
-                            break;
-                        }
-                    }
+                            (option.type === 'SUB_COMMAND' && matchingOption.type != ApplicationCommandOptionType.Subcommand) ||
+                            (option.type === 'SUB_COMMAND_GROUP' && matchingOption.type != ApplicationCommandOptionType.SubcommandGroup) ||
+                            (option.type === 'STRING' && matchingOption.type != ApplicationCommandOptionType.String) ||
+                            (option.type === 'INTEGER' && matchingOption.type != ApplicationCommandOptionType.Integer) ||
+                            (option.type === 'BOOLEAN' && matchingOption.type != ApplicationCommandOptionType.Boolean) ||
+                            (option.type === 'USER' && matchingOption.type != ApplicationCommandOptionType.User) ||
+                            (option.type === 'CHANNEL' && matchingOption.type != ApplicationCommandOptionType.Channel) ||
+                            (option.type === 'ROLE' && matchingOption.type != ApplicationCommandOptionType.Role) ||
+                            (option.type === 'MENTIONABLE' && matchingOption.type != ApplicationCommandOptionType.Mentionable) ||
+                            (option.type === 'NUMBER' && matchingOption.type != ApplicationCommandOptionType.Number)
+                        )
+                            return false;
 
-                if (edit) {
-                    if (matchingCommand.allowedRoles.length != 0 || matchingCommand.allowedUsers.length != 0)
-                        guild.commands.edit(guildCommand, compiledCommand.toJSON()).then(async (guildCommand) => {
-                            await guildCommand.permissions.set({
-                                permissions: [
-                                    {
-                                        id: guild.roles.everyone.id,
-                                        type: ApplicationCommandPermissionTypes.ROLE,
-                                        permission: false
-                                    },
-                                    ...matchingCommand.allowedUsers.map((user) => {
-                                        return {
-                                            id: this.client.discordClient.users.resolveId(user)!,
-                                            type: ApplicationCommandPermissionTypes.USER,
-                                            permission: true
-                                        };
-                                    })
-                                ]
-                            });
-                        });
-                    else if ((await guildCommand.permissions.fetch({}).catch(_ => [])).length != 0)
-                        guild.commands.edit(guildCommand, compiledCommand.toJSON()).then(async (guildCommand) => {
-                            await guildCommand.permissions.set({
-                                permissions: []
-                            });
-                        });
-                } else console.log('No edits required for command: ' + compiledCommand.name);
+                        return true;
+                    }).every(edit => true);
+
+                if (edit)
+                    guild.commands.edit(guildCommand, compiledCommand.toJSON())
+
                 commandsToRegister = commandsToRegister.filter((command) => command !== matchingCommand);
             });
 

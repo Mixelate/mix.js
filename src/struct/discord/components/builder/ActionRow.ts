@@ -18,4 +18,16 @@ export class ActionRow<T extends Component<ApiComponent<ComponentType>> = Compon
         this.data.components.push(...components.filter(component => component != undefined).map((component) => component!.toJSON()));
         return this;
     }
+
+    public enable() {
+        this.data.components.forEach((component: any) => {
+            component.disabled = false;
+        });
+    }
+
+    public disable() {
+        this.data.components.forEach((component: any) => {
+            component.disabled = true;
+        })
+    }
 }
