@@ -4,7 +4,7 @@ import { defer } from '../Defer';
 export const CreateNewDataStore = <T>(name: string): DataStore<T> => {
     const dataStore = new DataStore<T>({
         autoload: true,
-        filename: 'database/name' + '.db'
+        filename: `database/${name}.db`
     });
 
     dataStore.persistence.setAutocompactionInterval(3600000); // Auto compact every hour
