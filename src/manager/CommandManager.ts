@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Guild, Interaction } from 'discord.js';
 
-import { Client, Command } from '../..';
+import { AplikoBuildEmbeds, AplikoEmbedStyle, Client, Command } from '../..';
 
 export class CommandManager {
     private client: Client;
@@ -17,7 +17,32 @@ export class CommandManager {
 
     private async onInteractionCreate(interaction: Interaction) {
         if (!interaction.isCommand()) return;
-        await this._commandMap.get(interaction.commandName)?.callExecutors(interaction);
+        try {
+            await this._commandMap.get(interaction.commandName)?.callExecutors(interaction);
+        } catch (error: any) {
+            if (interaction.deferred)
+                return await interaction.editReply({
+                    embeds: AplikoBuildEmbeds(this.client, {
+                        style: AplikoEmbedStyle.ERROR,
+                        description: 'An error occurred while processing your command.',
+                        footer: {
+                            content: error.toString()
+                        }
+                    }),
+                    components: [],
+                    files: []
+                }).catch(_ => {});
+            else
+                interaction.reply({
+                    embeds: AplikoBuildEmbeds(this.client, {
+                        style: AplikoEmbedStyle.ERROR,
+                        description: 'An error occurred while processing your command.',
+                        footer: {
+                            content: error.toString()
+                        }
+                    })
+                }).catch(_ => null)
+        }
     }
 
     public async createCommandsGlobal() {
