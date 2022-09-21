@@ -70,6 +70,7 @@ export class RepliableInteraction extends BaseInteraction {
         });
 
         this.replied = true;
+        return this.getWebhook().fetchMessage('@original');
     }
 
     /**
