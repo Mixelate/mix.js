@@ -38,7 +38,7 @@ export class Client extends EventEmitter {
     public constructor(options: ClientOptions) {
         super();
         this.options = options;
-        this.discordClient = new DiscordClient({ intents: options.intents });
+        this.discordClient = new DiscordClient({ intents: options.intents || [] });
         this.rest = new REST().setToken(this.options.token);
         this.commandManager = new CommandManager(this);
         this.panelManager = new PanelManager(this);
@@ -241,9 +241,9 @@ export class Client extends EventEmitter {
 
 // TODO: Add more options from BaseClient
 export interface ClientOptions {
-    id: string;
+    id?: string;
     token: string;
-    intents: BitFieldResolvable<IntentsString, number>;
+    intents?: BitFieldResolvable<IntentsString, number>;
     ignoreGuilds?: string[];
     allowGuilds?: string[];
     apprearance?: {
