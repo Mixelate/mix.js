@@ -1,13 +1,14 @@
 {
+    "type": "module",
     "name": "mix.js",
     "version": "1.0.0",
     "description": "",
-    "main": "src/index.ts",
+    "author": "antja03",
+    "license": "ISC",
+    "main": "./src/index.ts",
     "scripts": {
         "barrel": "npx barrelsby -d ./src --delete"
     },
-    "author": "antja03",
-    "license": "ISC",
     "dependencies": {
         "@aspiesoft/cwsclib": "^1.0.2",
         "@discordjs/builders": "0.12.0",
