@@ -9,7 +9,7 @@ import { ChannelCommandOption, IntegerCommandOption, RoleCommandOption, StringCo
 import { SubCommand } from '../struct/application/command/SubCommand';
 
 export const SubCommandExecutor =
-    (name: string = '', description: string = '\u200b') =>
+    () =>
     (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
         // Extract the methods parameter types
         const paramNames = GetParameterNames(descriptor.value);
