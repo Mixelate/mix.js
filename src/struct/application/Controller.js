@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Controller = void 0;
 const discord_js_1 = require("discord.js");
-const ComponentInteractionData_1 = require("../../util/ComponentInteractionData");
 const ModalSubmitInteraction_1 = require("../discord/interactions/parser/ModalSubmitInteraction");
 const AplikoEmbed_ts_1 = require("../../util/conversion/AplikoEmbed.ts");
 const Errors_1 = require("../../util/Errors");
@@ -36,20 +35,17 @@ class Controller {
         if (!interaction.isMessageComponent())
             return;
         try {
-            const componentInteractionData = await (0, ComponentInteractionData_1.FetchComponentInteractionData)(interaction.customId);
             if (interaction.isButton()) {
-                await this.buttonCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.buttonCallbacks.get(interaction.customId)?.apply(this, [
                     {
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }
             if (interaction.isSelectMenu()) {
-                await this.dropdownCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.dropdownCallbacks.get(interaction.customId)?.apply(this, [
                     {
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }
@@ -75,11 +71,9 @@ class Controller {
                 return;
             return new Promise(async (resolve, reject) => {
                 try {
-                    const componentInteractionData = await (0, ComponentInteractionData_1.FetchComponentInteractionData)(modalSubmitInteraction.getCustomId());
-                    await this.modalCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                    await this.modalCallbacks.get(interaction.getCustomId())?.apply(this, [
                         {
                             interaction: modalSubmitInteraction,
-                            data: componentInteractionData
                         }
                     ]);
                 }

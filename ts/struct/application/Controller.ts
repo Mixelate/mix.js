@@ -1,7 +1,6 @@
 import { Interaction, Message, TextChannel } from 'discord.js';
 import { BaseInteraction, ButtonInteractionContext, CallbackHandler, Client, DropdownInteractionContext, InteractionType, ModalInteractionContext } from '../..';
 
-import { FetchComponentInteractionData } from '../../util/ComponentInteractionData';
 import { ApiBaseInteraction } from '../discord/interactions/api/ApiBaseInteraction';
 import { ApiModalSubmitInteraction, IsApiModalInteraction } from '../discord/interactions/api/ApiModalInteraction';
 import { ModalSubmitInteraction } from '../discord/interactions/parser/ModalSubmitInteraction';
@@ -55,22 +54,18 @@ export class Controller implements CallbackHandler {
         if (!interaction.isMessageComponent()) return;
 
         try {
-            const componentInteractionData = await FetchComponentInteractionData(interaction.customId);
-
             if (interaction.isButton()) {
-                await this.buttonCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.buttonCallbacks.get(interaction.customId)?.apply(this, [
                     <ButtonInteractionContext>{
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }
 
             if (interaction.isSelectMenu()) {
-                await this.dropdownCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.dropdownCallbacks.get(interaction.customId)?.apply(this, [
                     <DropdownInteractionContext>{
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }
@@ -98,12 +93,10 @@ export class Controller implements CallbackHandler {
 
             return new Promise<void>(async (resolve, reject) => {
                 try {
-                    const componentInteractionData = await FetchComponentInteractionData(modalSubmitInteraction.getCustomId());
 
-                    await this.modalCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                    await this.modalCallbacks.get(interaction.getCustomId())?.apply(this, [
                         <ModalInteractionContext>{
                             interaction: modalSubmitInteraction,
-                            data: componentInteractionData
                         }
                     ]);
                 } catch (err) {

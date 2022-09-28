@@ -2,7 +2,6 @@ import { Interaction, Message, TextChannel } from 'discord.js';
 
 import { BaseInteraction, ButtonInteractionContext, CallbackHandler, Client, DropdownInteractionContext, ModalInteractionContext } from '../..';
 import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../../util/conversion/AplikoEmbed.ts';
-import { FetchComponentInteractionData } from '../../util/ComponentInteractionData';
 import { ModalSubmitInteraction } from '../discord/interactions/parser/ModalSubmitInteraction';
 
 export class InteractionHandler implements CallbackHandler {
@@ -36,12 +35,10 @@ export class InteractionHandler implements CallbackHandler {
         if (interaction instanceof ModalSubmitInteraction) {
             return new Promise<void>(async (resolve, reject) => {
                 try {
-                    const componentInteractionData = await FetchComponentInteractionData(interaction.getCustomId());
 
-                    await this.modalCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                    await this.modalCallbacks.get(interaction.getCustomId())?.apply(this, [
                         <ModalInteractionContext>{
                             interaction: interaction,
-                            data: componentInteractionData
                         }
                     ]);
                 } catch (err) {
@@ -64,22 +61,19 @@ export class InteractionHandler implements CallbackHandler {
         if (!interaction.isMessageComponent()) return;
 
         try {
-            const componentInteractionData = await FetchComponentInteractionData(interaction.customId);
 
             if (interaction.isButton()) {
-                await this.buttonCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.buttonCallbacks.get(interaction.customId)?.apply(this, [
                     <ButtonInteractionContext>{
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }
 
             if (interaction.isSelectMenu()) {
-                await this.dropdownCallbacks.get(componentInteractionData.componentId)?.apply(this, [
+                await this.dropdownCallbacks.get(interaction.customId)?.apply(this, [
                     <DropdownInteractionContext>{
                         interaction,
-                        data: componentInteractionData
                     }
                 ]);
             }

@@ -16,6 +16,7 @@
         "discord-api-types": "0.26.1",
         "discord.js": "13.6.0",
         "moment": "^2.29.1",
+        "mongodb": "^4.10.0",
         "nedb": "^1.8.0",
         "nosql": "^6.1.0",
         "reflect-metadata": "^0.1.13",

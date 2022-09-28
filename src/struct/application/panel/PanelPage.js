@@ -39,14 +39,14 @@ class PanelPage {
         }
         return { success: true };
     }
-    async onModal(context, data) {
-        await this.modalCallbacks.get(data.componentId)?.apply(this, [context]);
+    async onModal(context) {
+        await this.modalCallbacks.get(context.interaction.getCustomId())?.apply(this, [context]);
     }
-    async onButton(context, data) {
-        await this.buttonCallbacks.get(data.componentId)?.apply(this, [context]);
+    async onButton(context) {
+        await this.buttonCallbacks.get(context.interaction.customId)?.apply(this, [context]);
     }
-    async onSelect(context, data) {
-        await this.dropdownCallbacks.get(data.componentId)?.apply(this, [context]);
+    async onSelect(context) {
+        await this.dropdownCallbacks.get(context.interaction.customId)?.apply(this, [context]);
     }
     requireGuild() {
         this._requireGuild = true;

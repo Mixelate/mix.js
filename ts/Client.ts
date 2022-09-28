@@ -9,9 +9,7 @@ import {
     GuildMember,
     IntentsString,
     Interaction,
-    Message,
-    ShardingManager,
-    TextChannel,
+    Message, TextChannel
 } from 'discord.js';
 import EventEmitter from 'events';
 
@@ -21,14 +19,16 @@ import { ControllerManager } from './manager/ControllerManager';
 import { PanelManager } from './manager/PanelManager';
 import { ApiBaseInteraction } from './struct/discord/interactions/api/ApiBaseInteraction';
 import { ApiModalSubmitInteraction, IsApiModalInteraction } from './struct/discord/interactions/api/ApiModalInteraction';
-import { InteractionType } from './struct/discord/interactions/enum/InteractionType';
 import { ModalSubmitInteraction } from './struct/discord/interactions/parser/ModalSubmitInteraction';
 
+
 export class Client extends EventEmitter {
+
+    public readonly options: ClientOptions;
+
     private ignoredGuilds?: string[];
     private allowedGuilds?: string[];
 
-    public readonly options: ClientOptions;
     public readonly discordClient: DiscordClient;
     public readonly rest: REST;
     public readonly commandManager: CommandManager;
@@ -45,7 +45,7 @@ export class Client extends EventEmitter {
         this.panelManager = new PanelManager(this);
         this.controllerManager = new ControllerManager(this);
         this.collectorManager = new CollectorManager(this);
-        
+
         this.allowedGuilds = options.allowGuilds;
         this.ignoredGuilds = options.ignoreGuilds;
 
@@ -163,7 +163,7 @@ export class Client extends EventEmitter {
 
     public async findChannel(guildId: string, channelId: string): Promise<Channel | null> {
         const cached = this.getCachedChannel(guildId, channelId);
-        
+
         if (cached) return cached;
 
         return await this.fetchChannel(guildId, channelId).catch(_ => null);
@@ -196,7 +196,7 @@ export class Client extends EventEmitter {
         const textChannels = await guild.channels.fetch()
             .then(channels => channels.map(channel => guild.channels.resolve(channel)))
             .then(channels => channels.filter(channel => channel instanceof TextChannel)) as
-                Collection<string, TextChannel>
+            Collection<string, TextChannel>
 
         if (!textChannels || textChannels.size === 0) return null;
 
@@ -204,7 +204,7 @@ export class Client extends EventEmitter {
             const message = await channel.messages.fetch(messageId)
                 .then(message => channel.messages.resolve(messageId))
                 .catch(_ => null)
-    
+
             if (message) return message;
         }
 

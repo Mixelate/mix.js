@@ -1,11 +1,8 @@
 import { Interaction } from 'discord.js';
-import { AplikoEmbedStyle, BaseInteraction, Client, PanelButtonInteractionContext, PanelModalInteractionContext, PanelPage } from '..';
-import { FetchComponentInteractionData } from '../util/ComponentInteractionData';
-import { ApiBaseInteraction, ApiModalSubmitInteraction, IsApiModalInteraction } from '..';
-import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
-import { AplikoBuildComponentRows, AplikoBuildEmbeds, ComponentsToDJS, RepliableInteraction, ThrowError, Embed } from '..';
-import { RespondableInteraction } from '../util/discord/DiscordTypes';
+import { AplikoBuildEmbeds, AplikoEmbedStyle, BaseInteraction, Client, ComponentsToDJS, Embed, PanelButtonInteractionContext, PanelModalInteractionContext, PanelPage, ThrowError } from '..';
 import { PanelContext, PanelDropdownInteractionContext } from '../struct/application/panel/PanelContext';
+import { ModalSubmitInteraction } from '../struct/discord/interactions/parser/ModalSubmitInteraction';
+import { RespondableInteraction } from '../util/discord/DiscordTypes';
 
 export type PanelPageClass = { new(...args: any[]): PanelPage };
 
@@ -28,28 +25,22 @@ export class PanelManager {
         if (!this.panelContextCache.has(interaction.message.id)) return;
 
         const context = this.panelContextCache.get(interaction.message.id)!;
-        const componentInteractionData = await FetchComponentInteractionData(interaction.customId);
 
         new Promise(async (resolve, reject) => {
             if (interaction.isButton()) {
                 await context.currentPage.onButton(
                     <PanelButtonInteractionContext>{
                         interaction: interaction,
-                        data: componentInteractionData,
                         panelContext: context
-                    },
-                    componentInteractionData
-                );
+                    }                );
             }
 
             if (interaction.isSelectMenu()) {
                 await context.currentPage.onSelect(
                     <PanelDropdownInteractionContext>{
                         interaction: interaction,
-                        data: componentInteractionData,
                         panelContext: context
-                    },
-                    componentInteractionData
+                    }
                 );
             }
         }).catch(err => {
@@ -77,15 +68,11 @@ export class PanelManager {
 
             if (!context) return;
 
-            const componentInteractionData = await FetchComponentInteractionData(interaction.getCustomId());
-
             context.currentPage.onModal(
                 <PanelModalInteractionContext>{
                     interaction: interaction,
-                    data: componentInteractionData,
                     panelContext: context
-                },
-                componentInteractionData
+                }
             ).catch(err => {
                 if (interaction.didReply || interaction.wasReplyDeferred) {
                     return interaction.editReply({

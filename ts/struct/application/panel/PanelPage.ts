@@ -1,8 +1,7 @@
 import { $ftm, ButtonInteractionContext, Client, DropdownInteractionContext, ModalInteractionContext, PageContent, RespondableInteraction } from '../../..';
 import { CallbackHandler } from '../../../decorator/RegisterCallbacks';
-import { ComponentInteractionDataModel } from '../../../util/ComponentInteractionData';
 import { AplikoEmbed, AplikoEmbedStyle } from '../../../util/conversion/AplikoEmbed.ts';
-import { PanelButtonInteractionContext, PanelContext, PanelDropdownInteractionContext, PanelModalInteractionContext } from '../../../struct/application/panel/PanelContext';
+import { PanelButtonInteractionContext, PanelContext, PanelDropdownInteractionContext, PanelModalInteractionContext } from './PanelContext';
 import { PermissionString } from "discord.js";
 
 
@@ -76,16 +75,16 @@ export abstract class PanelPage implements CallbackHandler {
         return { success: true };
     }
 
-    public async onModal(context: PanelModalInteractionContext, data: ComponentInteractionDataModel) {
-        await this.modalCallbacks.get(data.componentId)?.apply(this, [context]);
+    public async onModal(context: PanelModalInteractionContext) {
+        await this.modalCallbacks.get(context.interaction.getCustomId())?.apply(this, [context]);
     }
 
-    public async onButton(context: PanelButtonInteractionContext, data: ComponentInteractionDataModel) {
-        await this.buttonCallbacks.get(data.componentId)?.apply(this, [context]);
+    public async onButton(context: PanelButtonInteractionContext) {
+        await this.buttonCallbacks.get(context.interaction.customId)?.apply(this, [context]);
     }
 
-    public async onSelect(context: PanelDropdownInteractionContext, data: ComponentInteractionDataModel) {
-        await this.dropdownCallbacks.get(data.componentId)?.apply(this, [context]);
+    public async onSelect(context: PanelDropdownInteractionContext) {
+        await this.dropdownCallbacks.get(context.interaction.customId)?.apply(this, [context]);
     }
 
     protected requireGuild() {

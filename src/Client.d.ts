@@ -8,9 +8,9 @@ import { ControllerManager } from './manager/ControllerManager';
 import { PanelManager } from './manager/PanelManager';
 import { ApiBaseInteraction } from './struct/discord/interactions/api/ApiBaseInteraction';
 export declare class Client extends EventEmitter {
+    readonly options: ClientOptions;
     private ignoredGuilds?;
     private allowedGuilds?;
-    readonly options: ClientOptions;
     readonly discordClient: DiscordClient;
     readonly rest: REST;
     readonly commandManager: CommandManager;

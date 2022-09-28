@@ -1,7 +1,7 @@
-import { PanelPage } from "../../../struct/application/panel/PanelPage";
-import { ButtonInteractionContext } from "../../../struct/context/ButtonInteractionContext";
-import { DropdownInteractionContext } from "../../../struct/context/DropdownInteractionContext";
-import { ModalInteractionContext } from "../../../struct/context/ModalInteractionContext";
+import { PanelPage } from "./PanelPage";
+import { ButtonInteractionContext } from "../../context/ButtonInteractionContext";
+import { DropdownInteractionContext } from "../../context/DropdownInteractionContext";
+import { ModalInteractionContext } from "../../context/ModalInteractionContext";
 import { RespondableInteraction } from "../../../util/discord/DiscordTypes";
 export interface PanelContext {
     interaction: RespondableInteraction;

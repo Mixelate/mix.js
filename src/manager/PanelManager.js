@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PanelManager = void 0;
 const __1 = require("..");
-const ComponentInteractionData_1 = require("../util/ComponentInteractionData");
 const ModalSubmitInteraction_1 = require("../struct/discord/interactions/parser/ModalSubmitInteraction");
-const __2 = require("..");
 class PanelManager {
     constructor(bot) {
         this.client = bot;
@@ -19,33 +17,30 @@ class PanelManager {
         if (!this.panelContextCache.has(interaction.message.id))
             return;
         const context = this.panelContextCache.get(interaction.message.id);
-        const componentInteractionData = await (0, ComponentInteractionData_1.FetchComponentInteractionData)(interaction.customId);
         new Promise(async (resolve, reject) => {
             if (interaction.isButton()) {
                 await context.currentPage.onButton({
                     interaction: interaction,
-                    data: componentInteractionData,
                     panelContext: context
-                }, componentInteractionData);
+                });
             }
             if (interaction.isSelectMenu()) {
                 await context.currentPage.onSelect({
                     interaction: interaction,
-                    data: componentInteractionData,
                     panelContext: context
-                }, componentInteractionData);
+                });
             }
         }).catch(err => {
             if (interaction.replied || interaction.deferred) {
                 return interaction.editReply({
-                    embeds: (0, __2.AplikoBuildEmbeds)(this.client, {
+                    embeds: (0, __1.AplikoBuildEmbeds)(this.client, {
                         style: __1.AplikoEmbedStyle.ERROR,
                         description: err.toString()
                     })
                 }).catch(_ => { });
             }
             interaction.reply({
-                embeds: (0, __2.AplikoBuildEmbeds)(this.client, {
+                embeds: (0, __1.AplikoBuildEmbeds)(this.client, {
                     style: __1.AplikoEmbedStyle.ERROR,
                     description: err.toString()
                 })
@@ -57,12 +52,10 @@ class PanelManager {
             const context = this.panelContextCache.get(interaction.getMessageId());
             if (!context)
                 return;
-            const componentInteractionData = await (0, ComponentInteractionData_1.FetchComponentInteractionData)(interaction.getCustomId());
             context.currentPage.onModal({
                 interaction: interaction,
-                data: componentInteractionData,
                 panelContext: context
-            }, componentInteractionData).catch(err => {
+            }).catch(err => {
                 if (interaction.didReply || interaction.wasReplyDeferred) {
                     return interaction.editReply({
                         embeds: [{
@@ -84,7 +77,7 @@ class PanelManager {
         }
     }
     async openPanel(interaction, pageClass) {
-        const page = this.panelPageCache.get(pageClass) || (0, __2.ThrowError)('Panel page is not cached.');
+        const page = this.panelPageCache.get(pageClass) || (0, __1.ThrowError)('Panel page is not cached.');
         const replyMessage = await interaction.deferReply({
             ephemeral: true,
             fetchReply: true
@@ -112,7 +105,7 @@ class PanelManager {
         if (!prereqResult.success)
             return interaction.editReply({
                 embeds: [
-                    __2.Embed.new()
+                    __1.Embed.new()
                         .danger()
                         .description(prereqResult.message || 'An unknown error occured while opening that menu.')
                         .toJSON()
@@ -131,7 +124,7 @@ class PanelManager {
         await this.refreshPage(context);
     }
     async openPage(context, pageClass) {
-        const page = this.panelPageCache.get(pageClass) || (0, __2.ThrowError)('Panel page is not cached.');
+        const page = this.panelPageCache.get(pageClass) || (0, __1.ThrowError)('Panel page is not cached.');
         context.currentPage = page;
         await this.refreshPage(context);
     }
@@ -142,8 +135,8 @@ class PanelManager {
         if (skeleton)
             await context.interaction.editReply({
                 files: skeleton.attachments,
-                embeds: skeleton.embeds ? (0, __2.AplikoBuildEmbeds)(this.client, ...skeleton.embeds) : undefined,
-                components: (0, __2.ComponentsToDJS)(...skeleton.components)
+                embeds: skeleton.embeds ? (0, __1.AplikoBuildEmbeds)(this.client, ...skeleton.embeds) : undefined,
+                components: (0, __1.ComponentsToDJS)(...skeleton.components)
             }).catch(_ => null);
         let pageContent = await context.currentPage.construct(context, skeleton);
         if (!pageContent && skeleton)
@@ -154,8 +147,8 @@ class PanelManager {
             pageContent?.components.forEach(component => component?.disable());
         await context.interaction.editReply({
             files: pageContent.attachments,
-            embeds: pageContent.embeds ? (0, __2.AplikoBuildEmbeds)(this.client, ...pageContent.embeds) : undefined,
-            components: (0, __2.ComponentsToDJS)(...pageContent.components)
+            embeds: pageContent.embeds ? (0, __1.AplikoBuildEmbeds)(this.client, ...pageContent.embeds) : undefined,
+            components: (0, __1.ComponentsToDJS)(...pageContent.components)
         }).catch(_ => null);
     }
     registerPage(page) {

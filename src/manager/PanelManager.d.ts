@@ -1,7 +1,7 @@
 import { Interaction } from 'discord.js';
 import { BaseInteraction, Client, PanelPage } from '..';
-import { RespondableInteraction } from '../util/discord/DiscordTypes';
 import { PanelContext } from '../struct/application/panel/PanelContext';
+import { RespondableInteraction } from '../util/discord/DiscordTypes';
 export declare type PanelPageClass = {
     new (...args: any[]): PanelPage;
 };
