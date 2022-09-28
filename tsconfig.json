@@ -4,7 +4,7 @@
         "module": "CommonJS",
         "declaration": true,
         "strict": true,
-        "outDir": "./js",
+        "outDir": "src",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
