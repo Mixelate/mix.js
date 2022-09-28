@@ -1,7 +1,9 @@
 import { ApplicationCommandOptionType } from 'discord-api-types';
 import { Guild, Interaction } from 'discord.js';
+import { Client } from '../Client';
+import { Command } from '../struct/application/command/Command';
+import { AplikoBuildEmbeds, AplikoEmbedStyle } from '../util/conversion/AplikoEmbed.ts';
 
-import { AplikoBuildEmbeds, AplikoEmbedStyle, Client, Command } from '../..';
 
 export class CommandManager {
     private client: Client;

@@ -15,9 +15,10 @@ import {
 } from 'discord.js';
 import EventEmitter from 'events';
 
-import { ControllerManager, PanelManager } from '..';
 import { CollectorManager } from './manager/CollectorManager';
 import { CommandManager } from './manager/CommandManager';
+import { ControllerManager } from './manager/ControllerManager';
+import { PanelManager } from './manager/PanelManager';
 import { ApiBaseInteraction } from './struct/discord/interactions/api/ApiBaseInteraction';
 import { ApiModalSubmitInteraction, IsApiModalInteraction } from './struct/discord/interactions/api/ApiModalInteraction';
 import { InteractionType } from './struct/discord/interactions/enum/InteractionType';

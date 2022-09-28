@@ -24,35 +24,35 @@ import { CommandOption } from './CommandOptions';
 
 export class Command {
 
-    private _client: Client;
-    protected _name: string;
-    protected _description: string;
-    protected _executor?: Function;
-    protected _subCommands: SubCommand[];
-    protected _options: CommandOption[];
-    protected _allowByDefault: boolean;
-    protected _requirePermissions: PermissionResolvable[];
-    protected _allowedRoles: RoleResolvable[];
-    protected _allowedUsers: UserResolvable[];
+    client: Client;
+    name: string;
+    description: string;
+    executor?: Function;
+    subCommands: SubCommand[];
+    options: CommandOption[];
+    allowByDefault: boolean;
+    requirePermissions: PermissionResolvable[];
+    allowedRoles: RoleResolvable[];
+    allowedUsers: UserResolvable[];
 
     public constructor(client: Client) {
-        this._client = client;
-        this._name = '';
-        this._description = '\u200b';
-        this._subCommands = [];
-        this._options = [];
-        this._allowByDefault = true;
-        this._requirePermissions = [];
-        this._allowedRoles = [];
-        this._allowedUsers = [];
+        this.client = client;
+        this.name = '';
+        this.description = '\u200b';
+        this.subCommands = [];
+        this.options = [];
+        this.allowByDefault = true;
+        this.requirePermissions = [];
+        this.allowedRoles = [];
+        this.allowedUsers = [];
     }
 
     public async callExecutors(interaction: CommandInteraction) {
         try {
-            if (this._subCommands.length > 0) {
+            if (this.subCommands.length > 0) {
                 try {
                     if (interaction.options.getSubcommand()) {
-                        const subCommand = this._subCommands.find((subCommand) => subCommand.name === interaction.options.getSubcommand());
+                        const subCommand = this.subCommands.find((subCommand) => subCommand.name === interaction.options.getSubcommand());
 
                         if (!subCommand) ThrowError('COMMAND_MISSING_SUB_COMMAND');
 
@@ -65,9 +65,9 @@ export class Command {
                 }
             }
 
-            if (!this._executor) return;
+            if (!this.executor) return;
 
-            return this._executor.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
+            return this.executor.apply(this, [interaction, ...await this.resolveOptions(interaction)]);
         } catch (error: any) {
             await interaction.deferReply({ ephemeral: true }).catch((_) => { });
             await interaction.editReply({
@@ -92,11 +92,11 @@ export class Command {
             if (subCommand.options.length == 0)
                 return args;
         } else {
-            if (this._options.length == 0)
+            if (this.options.length == 0)
                 return args;
         }
 
-        for (const option of subCommand ? subCommand.options! : this._options) {
+        for (const option of subCommand ? subCommand.options! : this.options) {
             const raw = interaction.options.get(option.name);
 
             if (raw === null)
@@ -139,14 +139,14 @@ export class Command {
     }
 
     public build(): SlashCommandBuilder {
-        if (!this._name) this._name = this.constructor.name;
+        if (!this.name) this.name = this.constructor.name;
 
         const commandBuilder = new SlashCommandBuilder()
-            .setName(this._name)
-            .setDescription(this._description)
-            .setDefaultPermission(this._allowByDefault)
+            .setName(this.name)
+            .setDescription(this.description)
+            .setDefaultPermission(this.allowByDefault)
 
-        this.buildOptions(commandBuilder, this._options);
+        this.buildOptions(commandBuilder, this.options);
         this.buildSubCommands(commandBuilder);
 
         return commandBuilder;
@@ -203,7 +203,7 @@ export class Command {
     }
 
     public buildSubCommands(builder: SlashCommandBuilder) {
-        for (const subCommand of this._subCommands) {
+        for (const subCommand of this.subCommands) {
             const subCommandBuilder = new SlashCommandSubcommandBuilder().setName(subCommand.name).setDescription(subCommand.description);
 
             if (subCommand.options) this.buildOptions(subCommandBuilder, subCommand.options);
@@ -213,22 +213,6 @@ export class Command {
     }
 
     defaultDisallow() {
-        this._allowByDefault = false;
-    }
-
-    protected get client(): Client {
-        return this._client;
-    }
-
-    public get name(): string {
-        return this._name;
-    }
-
-    public get allowedUsers(): UserResolvable[] {
-        return this._allowedUsers;
-    }
-
-    public get allowedRoles(): RoleResolvable[] {
-        return this._allowedRoles;
+        this.allowByDefault = false;
     }
 }

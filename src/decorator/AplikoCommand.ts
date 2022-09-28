@@ -22,17 +22,17 @@ export function DefineCommand<T extends { new (...args: any[]): Command }>(Base:
             const name = Base.prototype[SymbolName];
             const description = Base.prototype[SymbolDescription];
 
-            if (subCommands) for (const subCommand of subCommands) this._subCommands.push(subCommand);
+            if (subCommands) for (const subCommand of subCommands) this.subCommands.push(subCommand);
 
-            if (options) for (const option of options) this._options.push(option);
+            if (options) for (const option of options) this.options.push(option);
 
             if (executor && executor instanceof Function) {
-                this._executor = executor;
+                this.executor = executor;
             }
 
-            this._name = name ? name : Base.name.toLowerCase();
+            this.name = name ? name : Base.name.toLowerCase();
 
-            if (description) this._description = description;
+            if (description) this.description = description;
         }
     };
 }
