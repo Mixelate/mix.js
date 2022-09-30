@@ -80,7 +80,7 @@ export const SubCommandExecutor =
                 }
 
                 // String
-                if (paramTypeString.includes('string')) {
+                if (paramTypeString.includes('String')) {
                     subCommand.options!.push(<StringCommandOption>{
                         type: 'string',
                         choices: undefined,
@@ -91,7 +91,8 @@ export const SubCommandExecutor =
                 }
 
                 // Integer
-                if (paramTypeString.includes('number')) {
+                if (paramTypeString.includes('Number')) {
+                    
                     subCommand.options!.push(<IntegerCommandOption>{
                         type: 'integer',
                         name: optionNames[idx],
