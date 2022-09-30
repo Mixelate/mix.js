@@ -58,6 +58,7 @@ class CommandManager {
                 return guildCommand.delete();
             const compiledCommand = matchingCommand.build();
             let edit = guildCommand.description != compiledCommand.description
+                || compiledCommand.options.length != 0
                 || guildCommand.options.length != compiledCommand.options.length
                 || guildCommand.defaultPermission != compiledCommand.defaultPermission
                 || !guildCommand.options.map(option => {

@@ -5,7 +5,7 @@ require("reflect-metadata");
 const Errors_1 = require("../util/Errors");
 const AplikoCommand_1 = require("./AplikoCommand");
 const Reflection_1 = require("../util/Reflection");
-const SubCommandExecutor = (name = '', description = '\u200b') => (target, propertyKey, descriptor) => {
+const SubCommandExecutor = () => (target, propertyKey, descriptor) => {
     // Extract the methods parameter types
     const paramNames = (0, Reflection_1.GetParameterNames)(descriptor.value);
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
@@ -66,7 +66,7 @@ const SubCommandExecutor = (name = '', description = '\u200b') => (target, prope
                 });
             }
             // String
-            if (paramTypeString.includes('string')) {
+            if (paramTypeString.includes('String')) {
                 subCommand.options.push({
                     type: 'string',
                     choices: undefined,
@@ -76,7 +76,7 @@ const SubCommandExecutor = (name = '', description = '\u200b') => (target, prope
                 });
             }
             // Integer
-            if (paramTypeString.includes('number')) {
+            if (paramTypeString.includes('Number')) {
                 subCommand.options.push({
                     type: 'integer',
                     name: optionNames[idx],
