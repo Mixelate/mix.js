@@ -20,7 +20,7 @@ async function CreatePrivateChannel(options) {
             permissionOverwrites.push({
                 type: 'role',
                 id: allowedRole,
-                allow: [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL]
+                allow: [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL, discord_js_1.Permissions.FLAGS.SEND_MESSAGES]
             });
         });
     if (options.allowedMembers)
