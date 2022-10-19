@@ -48,7 +48,8 @@ export class PanelManager {
                 return interaction.editReply({
                     embeds: AplikoBuildEmbeds(this.client, {
                         style: AplikoEmbedStyle.ERROR,
-                        description: err.toString()
+                        title: 'An error occurred.',
+                        description: err.toString(),
                     })
                 }).catch(_ => { });
             }
@@ -56,7 +57,8 @@ export class PanelManager {
             interaction.reply({
                 embeds: AplikoBuildEmbeds(this.client, {
                     style: AplikoEmbedStyle.ERROR,
-                    description: err.toString()
+                    title: 'An error occurred.',
+                    description: err.toString(),
                 })
             }).catch(_ => { })
         })
@@ -78,7 +80,8 @@ export class PanelManager {
                     return interaction.editReply({
                         embeds: [{
                             style: AplikoEmbedStyle.ERROR,
-                            description: err.toString()
+                            title: 'An error occurred.',
+                            description: err.toString(),
                         }]
                     }).catch(_ => { });
                 }
@@ -90,7 +93,8 @@ export class PanelManager {
                 interaction.reply({
                     embeds: [{
                         style: AplikoEmbedStyle.ERROR,
-                        description: err.toString()
+                        title: 'An error occurred.',
+                        description: err.toString(),
                     }]
                 }).catch(_ => { })
             });

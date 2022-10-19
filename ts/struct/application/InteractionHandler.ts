@@ -84,10 +84,8 @@ export class InteractionHandler implements CallbackHandler {
                 return await interaction.editReply({
                     embeds: AplikoBuildEmbeds(this.client, {
                         style: AplikoEmbedStyle.ERROR,
-                        description: 'An error occurred while processing your interaction.',
-                        footer: {
-                            content: error.toString()
-                        }
+                        title: 'An error occurred.',
+                        description: error.toString(),
                     }),
                     components: [],
                     files: []
@@ -95,10 +93,8 @@ export class InteractionHandler implements CallbackHandler {
                     await interaction.channel?.messages.resolve(interaction.message.id)?.edit({
                         embeds: AplikoBuildEmbeds(this.client, {
                             style: AplikoEmbedStyle.ERROR,
-                            description: 'An error occurred while processing your interaction.',
-                            footer: {
-                                content: error.toString()
-                            }
+                            title: 'An error occurred.',
+                            description: error.toString(),
                         }),
                         components: [],
                         files: []
@@ -106,12 +102,11 @@ export class InteractionHandler implements CallbackHandler {
                 });
             else
                 interaction.reply({
+                    ephemeral: true,
                     embeds: AplikoBuildEmbeds(this.client, {
                         style: AplikoEmbedStyle.ERROR,
-                        description: 'An error occurred while processing your interaction.',
-                        footer: {
-                            content: error.toString()
-                        }
+                        title: 'An error occurred.',
+                        description: error.toString(),
                     })
                 }).catch(_ => null)
         }

@@ -74,10 +74,8 @@ export class Controller implements CallbackHandler {
             await interaction.editReply({
                 embeds: AplikoBuildEmbeds(this.client, {
                     style: AplikoEmbedStyle.ERROR,
-                    description: 'An error occurred while processing your interaction.',
-                    footer: {
-                        content: error.toString()
-                    }
+                    title: 'An error occurred.',
+                    description: error.toString(),
                 }),
                 components: []
             });

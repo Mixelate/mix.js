@@ -159,6 +159,7 @@ export class RepliableInteraction extends BaseInteraction {
                 embeds: [
                     {
                         style: AplikoEmbedStyle.ERROR,
+                        title: 'An error occurred.',
                         description: error instanceof AplikoError ? 'A framework error has occurred. Contact an administrator' : error instanceof Error ? error.message : error
                     }
                 ]
@@ -170,6 +171,7 @@ export class RepliableInteraction extends BaseInteraction {
                 embeds: [
                     {
                         style: AplikoEmbedStyle.ERROR,
+                        title: 'An error occurred.',
                         description: error instanceof AplikoError ? 'A framework error has occurred. Contact an administrator' : error instanceof Error ? error.message : error
                     }
                 ]
