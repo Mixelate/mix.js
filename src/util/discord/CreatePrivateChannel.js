@@ -20,7 +20,7 @@ async function CreatePrivateChannel(options) {
             permissionOverwrites.push({
                 type: 'role',
                 id: allowedRole,
-                allow: [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL, discord_js_1.Permissions.FLAGS.SEND_MESSAGES]
+                allow: options.allowedPermissions || [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL, discord_js_1.Permissions.FLAGS.SEND_MESSAGES]
             });
         });
     if (options.allowedMembers)
@@ -28,7 +28,7 @@ async function CreatePrivateChannel(options) {
             permissionOverwrites.push({
                 type: 'member',
                 id: allowedMember,
-                allow: [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL, discord_js_1.Permissions.FLAGS.SEND_MESSAGES]
+                allow: options.allowedPermissions || [discord_js_1.Permissions.FLAGS.VIEW_CHANNEL, discord_js_1.Permissions.FLAGS.SEND_MESSAGES]
             });
         });
     channelOptions.permissionOverwrites = permissionOverwrites;

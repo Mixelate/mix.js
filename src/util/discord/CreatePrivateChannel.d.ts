@@ -5,5 +5,6 @@ export interface CreatePrivateChannelOptions {
     parent?: CategoryChannelResolvable;
     allowedRoles?: RoleResolvable[];
     allowedMembers?: GuildMemberResolvable[];
+    allowedPermissions?: bigint[];
 }
 export declare function CreatePrivateChannel(options: CreatePrivateChannelOptions): Promise<TextChannel>;
