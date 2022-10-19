@@ -7,6 +7,7 @@ export interface CreatePrivateChannelOptions {
     parent?: CategoryChannelResolvable;
     allowedRoles?: RoleResolvable[];
     allowedMembers?: GuildMemberResolvable[];
+    allowedPermissions?: bigint[];
 }
 
 export async function CreatePrivateChannel(options: CreatePrivateChannelOptions): Promise<TextChannel> {
@@ -29,7 +30,7 @@ export async function CreatePrivateChannel(options: CreatePrivateChannelOptions)
             permissionOverwrites.push({
                 type: 'role',
                 id: allowedRole,
-                allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES]
+                allow: options.allowedPermissions || [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES]
             });
         });
 
@@ -38,7 +39,7 @@ export async function CreatePrivateChannel(options: CreatePrivateChannelOptions)
             permissionOverwrites.push({
                 type: 'member',
                 id: allowedMember,
-                allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES]
+                allow: options.allowedPermissions || [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.SEND_MESSAGES]
             });
         });
 
