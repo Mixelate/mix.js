@@ -14,7 +14,7 @@
         "@discordjs/rest": "1.0.0",
         "@kunigi/string-compression": "^1.0.2",
         "discord-api-types": "0.26.1",
-        "discord.js": "13.6.0",
+        "discord.js": "13.9.0",
         "mix.js": "github:mixelate/mix.js",
         "moment": "^2.29.1",
         "mongodb": "^4.10.0",
