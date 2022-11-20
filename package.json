@@ -20,8 +20,7 @@
         "mongodb": "^4.10.0",
         "nedb": "^1.8.0",
         "nosql": "^6.1.0",
-        "reflect-metadata": "^0.1.13",
-        "shrink-string": "^3.0.9"
+        "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@types/nedb": "^1.8.12",
